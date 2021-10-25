@@ -1,14 +1,14 @@
 public class Weapon {
-    public String name;
-    public int damage;
+    private String name;
+    private int damage;
 
     public Weapon() {
-        name = "DefaultWeaponName";
-        damage = 0;
+        this.name = "DefaultWeaponName";
+        this.damage = 0;
     }
 
     public Weapon(String aName, int aDamage) {
-        name = aName;
-        damage = aDamage;
+        this.name = aName;
+        this.damage = aDamage;
     }
 }

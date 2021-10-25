@@ -2,41 +2,41 @@ public class Stats {
     private int strength, intelligence, luck, agility, health, energy;
 
     public Stats() {
-        strength = 1;
-        intelligence = 1;
-        luck = 1;
-        agility = 1;
-        health = 1;
-        energy = 1;
+        this.strength = 1;
+        this.intelligence = 1;
+        this.luck = 1;
+        this.agility = 1;
+        this.health = 1;
+        this.energy = 1;
     }
 
-    public void increase(String aStat, int aNum) {
+    private void increase(String aStat, int aNum) {
         switch (aStat) {
             case "strength":
-                strength += aNum;
+                this.strength += aNum;
                 break;
             case "intelligence":
-                intelligence += aNum;
+                this.intelligence += aNum;
                 break;
             case "luck":
-                luck += aNum;
+                this.luck += aNum;
                 break;
             case "agility":
-                agility += aNum;
+                this.agility += aNum;
                 break;
             case "health":
-                health += aNum;
+                this.health += aNum;
                 break;
             case "energy":
-                energy += aNum;
+                this.energy += aNum;
                 break;
             case "all":
-                strength += aNum;
-                intelligence += aNum;
-                luck += aNum;
-                agility += aNum;
-                health += aNum;
-                energy += aNum;
+                this.strength += aNum;
+                this.intelligence += aNum;
+                this.luck += aNum;
+                this.agility += aNum;
+                this.health += aNum;
+                this.energy += aNum;
                 break;
             default:
                 //System.out.println("Incorrect stat applied");
@@ -44,33 +44,33 @@ public class Stats {
         }
     }
 
-    public void decrease(String aStat, int aNum) {
+    private void decrease(String aStat, int aNum) {
         switch (aStat) {
             case "strength":
-                strength -= aNum;
+                this.strength -= aNum;
                 break;
             case "intelligence":
-                intelligence -= aNum;
+                this.intelligence -= aNum;
                 break;
             case "luck":
-                luck -= aNum;
+                this.luck -= aNum;
                 break;
             case "agility":
-                agility -= aNum;
+                this.agility -= aNum;
                 break;
             case "health":
-                health -= aNum;
+                this.health -= aNum;
                 break;
             case "energy":
-                energy -= aNum;
+                this.energy -= aNum;
                 break;
             case "all":
-                strength -= aNum;
-                intelligence -= aNum;
-                luck -= aNum;
-                agility -= aNum;
-                health -= aNum;
-                energy -= aNum;
+                this.strength -= aNum;
+                this.intelligence -= aNum;
+                this.luck -= aNum;
+                this.agility -= aNum;
+                this.health -= aNum;
+                this.energy -= aNum;
                 break;
             default:
                 //System.out.println("Incorrect stat applied");

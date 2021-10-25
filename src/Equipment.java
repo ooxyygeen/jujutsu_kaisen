@@ -1,15 +1,15 @@
 public class Equipment<T> {
-    public Weapon weapon;
-    public Uniform uniform;
+    private Weapon weapon;
+    private Uniform uniform;
 //    public <T> equip;
 
-    public void equip(String aType, T aObj) {
+    private void equip(String aType, T aObj) {
         switch (aType) {
             case "weapon":
-                weapon = (Weapon) aObj;
+                this.weapon = (Weapon) aObj;
                 break;
             case "uniform":
-                uniform = (Uniform) aObj;
+                this.uniform = (Uniform) aObj;
                 break;
             default:
 //                System.out.println("Incorrect equipment");

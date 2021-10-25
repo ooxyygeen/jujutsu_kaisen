@@ -4,14 +4,14 @@ public class Inventory<T> {
     private ArrayList<T> inventory;
 
     public Inventory() {
-        inventory = new ArrayList<T>();
+        this.inventory = new ArrayList<T>();
     }
 
-    public void addElement(T aElem) {
-        inventory.add(aElem);
+    private void addElement(T aElem) {
+        this.inventory.add(aElem);
     }
 
-    public void removeElement(int aIndex) {
-        inventory.remove(aIndex);
+    private void removeElement(int aIndex) {
+        this.inventory.remove(aIndex);
     }
 }

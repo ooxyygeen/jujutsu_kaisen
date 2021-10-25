@@ -1,14 +1,14 @@
 public class Uniform {
-    public String name;
-    public int defense;
+    private String name;
+    private int defense;
 
     public Uniform() {
-        name = "DeafultUniformName";
-        defense = 0;
+        this.name = "DeafultUniformName";
+        this.defense = 0;
     }
 
     public Uniform(String aName, int aDefense) {
-        name = aName;
-        defense = aDefense;
+        this.name = aName;
+        this.defense = aDefense;
     }
 }

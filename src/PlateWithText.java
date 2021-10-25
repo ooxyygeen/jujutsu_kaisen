@@ -1,11 +1,11 @@
-public class PlateWithText extends ObjectOnMap implements Activate, ShowInfo {
-    public String text;
-    public PlateWithText (){
+public class PlateWithText extends MapObject implements Activate, ShowInfo {
+    private String text;
+    private PlateWithText (){
         text = "...";
     }
-    public PlateWithText (String aName, String aText){
-        name = aName;
-        text = aText;
+    private PlateWithText (String aName, String aText){
+        setName(aName);
+        this.text = aText;
     }
     @Override
     public void activate(){
@@ -13,6 +13,6 @@ public class PlateWithText extends ObjectOnMap implements Activate, ShowInfo {
     }
     @Override
     public void showInfo(){
-        System.out.println(name);
+        System.out.println(getName());
     }
 }
