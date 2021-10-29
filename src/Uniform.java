@@ -1,4 +1,4 @@
-public class Uniform {
+public class Uniform implements ShowInfo{
     private String name;
     private int defense;
 
@@ -10,5 +10,10 @@ public class Uniform {
     public Uniform(String aName, int aDefense) {
         this.name = aName;
         this.defense = aDefense;
+    }
+    @Override
+    public void showInfo(){
+        System.out.println("Name of the uniform: "+name);
+        System.out.println("Defense of the weapon: "+defense);
     }
 }

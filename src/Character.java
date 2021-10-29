@@ -10,7 +10,16 @@ public class Character extends MapObject {
 
     private String direction;
 
+    public String getDirection(){
+        return this.direction;
+    }
+
+    public void setDirection(String aDirection){
+        this.direction = aDirection;
+    }
+
     public Character() {
+        super.setPresence(true);
         setPosX(0);
         setPosY(0);
         this.name = "Chelikbaser";
@@ -20,7 +29,8 @@ public class Character extends MapObject {
         this.direction = "down";
     }
 
-    private void move(String aDirection, int aStepsNum) {
+    public void move(String aDirection, int aStepsNum) {
+        boolean obstacle = false;
         switch (aDirection) {
             case "up":
                 setPosY(getPosY() - aStepsNum);

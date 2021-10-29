@@ -1,6 +1,6 @@
-public class Weapon {
-    private String name;
-    private int damage;
+public class Weapon implements ShowInfo{
+    private final String name;
+    private final int damage;
 
     public Weapon() {
         this.name = "DefaultWeaponName";
@@ -10,5 +10,10 @@ public class Weapon {
     public Weapon(String aName, int aDamage) {
         this.name = aName;
         this.damage = aDamage;
+    }
+    @Override
+    public void showInfo(){
+        System.out.println("Name of the weapon: "+name);
+        System.out.println("Damage of the weapon: "+damage);
     }
 }

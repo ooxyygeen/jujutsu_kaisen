@@ -6,7 +6,7 @@ public class Stats {
         this.intelligence = 1;
         this.luck = 1;
         this.agility = 1;
-        this.health = 1;
+        this.health = 10;
         this.energy = 1;
     }
 
