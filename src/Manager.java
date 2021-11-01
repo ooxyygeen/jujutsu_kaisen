@@ -11,6 +11,7 @@ public class Manager {
         Scanner s = new Scanner(System.in);
 //        String actionChoice, filename, directionOfMoving;
         OutputStream saveFile;
+        setTest();
         int menuChoice;
         while (true) {
             System.out.println("""
@@ -63,6 +64,9 @@ public class Manager {
     public static void game() {
         Scanner s = new Scanner(System.in);
         while (true) {
+            System.out.println("Your x position is " + player.getPosX());
+            System.out.println("Your y position is " + player.getPosY());
+            System.out.println("Your direction is " + player.getDirection());
             update();
             System.out.println("""
                     1. Move
@@ -92,28 +96,28 @@ public class Manager {
                             if (isObstaclePresent("up", steps, player)) {
                                 steps = player.getPosY() - obstacleY - 1;
                             }
-                            swap(player, map[player.getPosY() - steps][player.getPosX()]);
+                            swap(player, player.getPosY() - steps, player.getPosX());
                             player.move("up", steps);
                             break;
                         case 2:
                             if (isObstaclePresent("right", steps, player)) {
                                 steps = obstacleX - player.getPosX() - 1;
                             }
-                            swap(player, map[player.getPosY()][player.getPosX() + steps]);
+                            swap(player, player.getPosY(),player.getPosX() + steps);
                             player.move("right", steps);
                             break;
                         case 3:
                             if (isObstaclePresent("down", steps, player)) {
                                 steps = obstacleY - player.getPosY() - 1;
                             }
-                            swap(player, map[player.getPosY() + steps][player.getPosX()]);
+                            swap(player, player.getPosY() + steps,player.getPosX());
                             player.move("down", steps);
                             break;
                         case 4:
                             if (isObstaclePresent("left", steps, player)) {
                                 steps = player.getPosX() - obstacleX - 1;
                             }
-                            swap(player, map[player.getPosY()][player.getPosX() - steps]);
+                            swap(player, player.getPosY(),player.getPosX() - steps);
                             player.move("left", steps);
                             break;
                         default:
@@ -122,8 +126,11 @@ public class Manager {
                     }
                     break;
                 case 2 :
-                    // interact
-                    checkFront(player);
+                    if (checkFront(player)) {
+                        activate(map[player.getFrontY()][player.getFrontX()]);
+                    }
+                    else
+                        System.out.println("There is nothing in front of you!");
                     break;
                 case 3 :
                     return;
@@ -138,36 +145,35 @@ public class Manager {
         aObject.showInfo();
     }
 
-    public static void swap(MapObject first, MapObject second){
-        MapObject temp = first;
-        map[first.getPosY()][first.getPosX()] = map[second.getPosY()][second.getPosX()];
-        map[second.getPosY()][second.getPosX()] = temp;
+    public static void swap(MapObject first, int Y, int X){
+        map[Y][X] = first;
+        map[first.getPosY()][first.getPosX()] = null;
     }
     public static boolean isObstaclePresent(String direction, int steps, Character player) {
         if (direction.equals("up")) {
-            for (int i = player.getPosY(); i >= player.getPosY() - steps; i--) {
-                if (map[i][player.getPosX()].getPresence()) {
+            for (int i = player.getPosY() - 1; i >= player.getPosY() - steps; i--) {
+                if (map[i][player.getPosX()] != null && map[i][player.getPosX()].getPresence()) {
                     obstacleY = i;
                     return true;
                 }
             }
         } else if (direction.equals("down")) {
-            for (int i = player.getPosY(); i <= player.getPosY() + steps; i++) {
-                if (map[i][player.getPosX()].getPresence()) {
+            for (int i = player.getPosY() + 1; i <= player.getPosY() + steps; i++) {
+                if (map[i][player.getPosX()] != null && map[i][player.getPosX()].getPresence()) {
                     obstacleY = i;
                     return true;
                 }
             }
         } else if (direction.equals("right")) {
-            for (int i = player.getPosX(); i <= player.getPosX() + steps; i++) {
-                if (map[player.getPosY()][i].getPresence()) {
+            for (int i = player.getPosX() + 1; i <= player.getPosX() + steps; i++) {
+                if (map[player.getPosY()][i] != null && map[player.getPosY()][i].getPresence()) {
                     obstacleX = i;
                     return true;
                 }
             }
         } else if (direction.equals("left")) {
-            for (int i = player.getPosX(); i >= player.getPosX() - steps; i--) {
-                if (map[player.getPosY()][i].getPresence()) {
+            for (int i = player.getPosX() - 1; i >= player.getPosX() - steps; i--) {
+                if (map[player.getPosY()][i] != null && map[player.getPosY()][i].getPresence()) {
                     obstacleX = i;
                     return true;
                 }
@@ -184,6 +190,18 @@ public class Manager {
     }
 
     public static boolean checkFront(Character player) {
-        return map[player.getFrontY()][player.getFrontX()].getPresence();
+        if (map[player.getFrontY()][player.getFrontX()] != null)
+            return map[player.getFrontY()][player.getFrontX()].getPresence();
+        else
+            return false;
+    }
+
+    public static void activate(Activate act){
+        act.activate();
+    }
+
+    public static void setTest(){
+        map[0][0] = player;
+        map[7][2] = new PlateWithText("Congrats, you have moved!");
     }
 }

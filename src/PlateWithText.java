@@ -1,11 +1,13 @@
 public class PlateWithText extends MapObject implements Activate, ShowInfo {
     private String text;
-    private PlateWithText (){
+    public PlateWithText (){
         text = "...";
+        setPresence(true);
     }
-    private PlateWithText (String aName, String aText){
-        setName(aName);
+    public PlateWithText (String aText){
+        setName("Plate with text");
         this.text = aText;
+        setPresence(true);
     }
     @Override
     public void activate(){

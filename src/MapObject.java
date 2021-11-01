@@ -1,5 +1,5 @@
 
-public class MapObject {
+public class MapObject implements Activate{
     private int posX;
     private int posY; // coordinates
     private String name;
@@ -39,5 +39,10 @@ public class MapObject {
 
     public String getName() {
         return name;
+    }
+
+    @Override
+    public void activate() {
+
     }
 }
