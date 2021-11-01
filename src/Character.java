@@ -31,6 +31,7 @@ public class Character extends MapObject {
 
     public void move(String aDirection, int aStepsNum) {
         boolean obstacle = false;
+        this.direction = aDirection;
         switch (aDirection) {
             case "up":
                 setPosY(getPosY() - aStepsNum);
@@ -45,8 +46,28 @@ public class Character extends MapObject {
                 setPosX(getPosX() - aStepsNum);
                 break;
             default:
-//                System.out.println("iseemolodoypridurak");
+                System.out.println("iseemolodoypridurak");
                 break;
+        }
+    }
+
+    public int getFrontX() {
+        if (direction.equals("up") || direction.equals("down")) {
+            return this.getPosX();
+        } else if (direction.equals("right")) {
+            return this.getPosX() + 1;
+        } else {
+            return this.getPosX() - 1;
+        }
+    }
+
+    public int getFrontY() {
+        if (direction.equals("right") || direction.equals("left")) {
+            return this.getPosY();
+        } else if (direction.equals("down")) {
+            return this.getPosY() + 1;
+        } else {
+            return this.getPosY() - 1;
         }
     }
 }

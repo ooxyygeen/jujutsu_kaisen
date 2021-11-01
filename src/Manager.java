@@ -1,53 +1,115 @@
+import java.io.*;
 import java.util.Scanner;
 
 public class Manager {
     static MapObject[][] map = new MapObject[100][100];
-    static int steps, obstacleX, obstacleY;
-
-    public static void main(String[] args) {
-        Character player = new Character();
+    static int steps, obstacleX, obstacleY, actionChoice, directionOfMoving;
+    static Character player = new Character();
+    static String filename;
+    public static void main(String[] args) throws FileNotFoundException {
+//        Character player = new Character();
         Scanner s = new Scanner(System.in);
-        String actionChoice, directionOfMovnig;
+//        String actionChoice, filename, directionOfMoving;
+        OutputStream saveFile;
+        int menuChoice;
         while (true) {
+            System.out.println("""
+                    Welcome to Jujutsu Kaisen game.
+
+                    1. New game
+                    2. Continue
+                    3. Load game
+                    4. Save game
+                    5. Help
+                    6. Exit
+
+
+                    Enter your choice:""");
+            menuChoice = s.nextInt();
+            switch (menuChoice) {
+                case 1 :
+                    System.out.println("Enter session name");
+                    filename = s.nextLine();
+                    saveFile = new FileOutputStream(filename + ".dat");
+                    break;
+                case 2 :
+                    // continue game, if it's started or start last session
+                    game();
+                    break;
+                case 3 :
+                    // choose session
+                    // read data from file
+                    // getter from MapObject
+                    game();
+                    break;
+                case 4 :
+                    // write data to file from current session
+                    break;
+                case 5 :
+                    // instruction to the game(keyboard, goals, tips)
+                    break;
+                case 6 :
+                    // close savefile
+                    // exit program
+                    return;
+                default :
+                    System.out.println("Something went wrong. Try again.");
+                    break;
+            }
+
+        }
+    }
+
+    public static void game() {
+        Scanner s = new Scanner(System.in);
+        while (true) {
+            update();
+            System.out.println("""
+                    1. Move
+                    2. Interact
+                    3. Menu
+
+                    Enter your choice:""");
             System.out.println("What is your option?");
-            actionChoice = s.nextLine();
+            actionChoice = s.nextInt();
             switch(actionChoice) {
-                case "move" :
+                case 1 :
                     obstacleX = -1;
                     obstacleY = -1;
+                    System.out.println("""
+                    1. Up
+                    2. Right
+                    3. Down
+                    4. Left
+
+                    Enter your choice:""");
                     System.out.println("Where do you want to go?");
-                    directionOfMovnig = s.nextLine();
-                    switch (directionOfMovnig) {
-                        case "up":
-                            System.out.println("How far do you want to go?");
-                            steps = s.nextInt();
+                    directionOfMoving = s.nextInt();
+                    System.out.println("How far do you want to go?"); // move 0 steps for changing the direction
+                    steps = s.nextInt();
+                    switch (directionOfMoving) {
+                        case 1:
                             if (isObstaclePresent("up", steps, player)) {
                                 steps = player.getPosY() - obstacleY - 1;
                             }
                             swap(player, map[player.getPosY() - steps][player.getPosX()]);
                             player.move("up", steps);
                             break;
-                        case "down":
-                            System.out.println("How far do you want to go?");
-                            steps = s.nextInt();
-                            if (isObstaclePresent("down", steps, player)) {
-                                steps = obstacleY - player.getPosY() - 1;
-                            }
-                            swap(player, map[player.getPosY() + steps][player.getPosX()]);
-                            player.move("down", steps);
-                            break;
-                        case "right":
-                            System.out.println("How far do you want to go?");
-                            steps = s.nextInt();
+                        case 2:
                             if (isObstaclePresent("right", steps, player)) {
                                 steps = obstacleX - player.getPosX() - 1;
                             }
                             swap(player, map[player.getPosY()][player.getPosX() + steps]);
                             player.move("right", steps);
                             break;
-                        case "left":
-                            System.out.println("How far do you want to go?");
-                            steps = s.nextInt();
+                        case 3:
+                            if (isObstaclePresent("down", steps, player)) {
+                                steps = obstacleY - player.getPosY() - 1;
+                            }
+                            swap(player, map[player.getPosY() + steps][player.getPosX()]);
+                            player.move("down", steps);
+                            break;
+                        case 4:
                             if (isObstaclePresent("left", steps, player)) {
                                 steps = player.getPosX() - obstacleX - 1;
                             }
@@ -56,9 +118,16 @@ public class Manager {
                             break;
                         default:
                             System.out.println("Try choosing moving option again");
+                            break;
                     }
                     break;
-                default:
+                case 2 :
+                    // interact
+                    checkFront(player);
+                    break;
+                case 3 :
+                    return;
+                default :
                     System.out.println("Try choosing action option again");
                     break;
             }
@@ -107,22 +176,14 @@ public class Manager {
         return false;
     }
 
-    public void update(){
-
+    public static void update(){
+        // checkers for events
+        if (checkFront(player)) {
+            System.out.println("There is " + map[player.getFrontY()][player.getFrontX()].getName() + " in front of you");
+        }
     }
-    public static boolean checkFront(Character player){
-        if (player.getDirection().equals("right")){
-            return map[player.getPosY()][player.getPosX() + 1].getPresence();
-        }
-        else if (player.getDirection().equals("left")){
-            return map[player.getPosY()][player.getPosX() - 1].getPresence();
-        }
-        else if (player.getDirection().equals("up")){
-            return map[player.getPosY() - 1][player.getPosX()].getPresence();
-        }
-        else if (player.getDirection().equals("down")){
-            return map[player.getPosY() + 1][player.getPosX()].getPresence();
-        }
-        return false;
+
+    public static boolean checkFront(Character player) {
+        return map[player.getFrontY()][player.getFrontX()].getPresence();
     }
 }

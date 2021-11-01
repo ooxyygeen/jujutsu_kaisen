@@ -1,5 +1,5 @@
 public class Technique {
-    private String name;
+    private final String name;
     private int damage, range, heal, accuracy;
 
     public Technique() {
