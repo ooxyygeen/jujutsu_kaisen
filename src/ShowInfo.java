@@ -1,3 +1,3 @@
 public interface ShowInfo {
-    public void showInfo();
+    String showInfo();
 }

@@ -1,3 +1,3 @@
-public interface Activate {
-    public void activate();
+public abstract interface Activate {
+    String activate(Character character);
 }

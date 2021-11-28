@@ -10,7 +10,7 @@ public class Stats {
         this.energy = 1;
     }
 
-    private void increase(String aStat, int aNum) {
+    public String change(String aStat, int aNum) {
         switch (aStat) {
             case "strength":
                 this.strength += aNum;
@@ -39,42 +39,8 @@ public class Stats {
                 this.energy += aNum;
                 break;
             default:
-                //System.out.println("Incorrect stat applied");
-                break;
+                return "IncorrectIncomingStatException";
         }
-    }
-
-    private void decrease(String aStat, int aNum) {
-        switch (aStat) {
-            case "strength":
-                this.strength -= aNum;
-                break;
-            case "intelligence":
-                this.intelligence -= aNum;
-                break;
-            case "luck":
-                this.luck -= aNum;
-                break;
-            case "agility":
-                this.agility -= aNum;
-                break;
-            case "health":
-                this.health -= aNum;
-                break;
-            case "energy":
-                this.energy -= aNum;
-                break;
-            case "all":
-                this.strength -= aNum;
-                this.intelligence -= aNum;
-                this.luck -= aNum;
-                this.agility -= aNum;
-                this.health -= aNum;
-                this.energy -= aNum;
-                break;
-            default:
-                //System.out.println("Incorrect stat applied");
-                break;
-        }
+        return "new stats are applied";
     }
 }

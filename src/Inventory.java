@@ -1,30 +1,41 @@
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.ListIterator;
 
-public class Inventory<T> {
-    private ArrayList<T> inventory;
+public class Inventory<Object> {
+    private ArrayList<Object> inventory;
 
     public Inventory() {
-        this.inventory = new ArrayList<T>();
+        this.inventory = new ArrayList<>();
     }
 
-    private void addElement(T aElem) {
-        this.inventory.add(aElem);
+    public String addElement(Object element) {
+        if (element != null){
+            this.inventory.add(element);
+            return "Item has been successfully added to inventory";
+        }
+        return "ItemNullPointerException";
     }
 
-    private void removeElement(String elementName) {
-        /*
-        Iterator it = this.inventory.iterator();
-        for (int i = 0; i < this.inventory.toArray().length; i++){
-            if (getName(it.getClass()).equals("elementName")){
-            this.inventory.remove(this.inventory.indexOf(it));
-            break;
+    public String removeElement(String elementName) {
+        ListIterator<Object> it = this.inventory.listIterator();
+        while (it.hasNext()) {
+            if (it.getClass().getName().equals(elementName)) {
+                this.inventory.remove(it.nextIndex()-1);
+                return "Item has been successfully removed";
             }
             it.next();
-        //нижче якась бебра, я хз як ти збирався прибирать правильний предмет
-        this.inventory.remove(aIndex);
-        this.inventory.i
         }
-        */
+        return "Item not found";
+    }
+    public boolean findElement(String elementName){
+        ListIterator<Object> it = this.inventory.listIterator();
+        while (it.hasNext()) {
+            if (it.getClass().getName().equals(elementName)) {
+                return true;
+            }
+            it.next();
+        }
+        return false;
     }
 }

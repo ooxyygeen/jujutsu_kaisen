@@ -1,20 +1,39 @@
 
-public class MapObject implements Activate{
-    private int posX;
-    private int posY; // coordinates
+public class MapObject implements ShowInfo, Activate{
+    private Coordinates coordinates;
     private String name;
     private boolean presence;
-
+    private int posX, posY;
     public MapObject(){
         this.presence = false;
     }
 
-    public void setPosX(int newPosX) {
-        this.posX = newPosX;
+    public String setCoordinates(int newX, int newY){
+        return this.coordinates.setCoordinates(newX, newY);
     }
 
-    public void setPosY(int newPosY) {
-        this.posY = newPosY;
+    public Coordinates getCoordinates(){
+        return this.coordinates;
+    }
+
+    public void setPosX(int newPosX, int mapSizeX) {
+        if (newPosX >= 0 && newPosX < mapSizeX) {
+            this.posX = newPosX;
+        }
+        if (newPosX < 0){
+            this.posX = 0;
+        }
+        this.posX = mapSizeX - 1;
+    }
+
+    public void setPosY(int newPosY, int mapSizeY) {
+        if (newPosY >= 0 && newPosY < mapSizeY) {
+            this.posY = newPosY;
+        }
+        if (newPosY < 0){
+            this.posY = 0;
+        }
+        this.posY = mapSizeY - 1;
     }
 
     public int getPosX() {
@@ -42,7 +61,12 @@ public class MapObject implements Activate{
     }
 
     @Override
-    public void activate() {
+    public String activate(Character character) {
+        return null;
+    }
 
+    @Override
+    public String showInfo() {
+        return null;
     }
 }

@@ -12,8 +12,7 @@ public class Weapon implements ShowInfo{
         this.damage = aDamage;
     }
     @Override
-    public void showInfo(){
-        System.out.println("Name of the weapon: "+name);
-        System.out.println("Damage of the weapon: "+damage);
+    public String showInfo(){
+        return "Name of the weapon: " + this.name + "\nDamage of the weapon: " + this.damage;
     }
 }

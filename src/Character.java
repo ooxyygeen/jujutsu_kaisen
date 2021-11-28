@@ -1,11 +1,10 @@
 import java.util.ArrayList;
 
-public class Character extends MapObject {
-    private String name;
-    private Inventory inventory;
+public class Character<Object> extends MapObject {
+    private Inventory<Object> inventory;
     private Equipment equipment;
     private Stats stats;
-    private ArrayList <Technique> techniques = new ArrayList<Technique>();
+    private ArrayList <Technique> techniques;
     private Technique domainExpansion;
 
     private String direction;
@@ -20,41 +19,52 @@ public class Character extends MapObject {
 
     public Character() {
         super.setPresence(true);
-        setPosX(0);
-        setPosY(0);
-        this.name = "Chelikbaser";
-        this.inventory = new Inventory();
-        this.equipment = new Equipment();
+        super.setCoordinates(0,0);
+        super.setName("Chelikbaser");
+        this.inventory = new Inventory<>();
+        this.equipment = new Equipment<>();
+        this.techniques = new ArrayList<>();
         this.stats = new Stats();
         this.direction = "down";
     }
 
-    public void move(String aDirection, int aStepsNum) {
-        boolean obstacle = false;
+    public String changeStats(String aStat, int aValue){
+        return this.stats.change(aStat, aValue);
+    }
+
+    public String addItem(Object item){
+        return this.inventory.addElement(item);
+    }
+
+    public boolean findItem(String item){
+        return this.inventory.findElement(item);
+    }
+
+    public String move(String aDirection, int aStepsNum, int mapSizeX, int mapSizeY) {
         this.direction = aDirection;
         switch (aDirection) {
             case "up":
-                setPosY(getPosY() - aStepsNum);
+                this.setPosY(this.getPosY() - aStepsNum, mapSizeY);
                 break;
             case "right":
-                setPosX(getPosX() + aStepsNum);
+                this.setPosX(this.getPosX() + aStepsNum, mapSizeX);
                 break;
             case "down":
-                setPosY(getPosY() + aStepsNum);
+                this.setPosY(this.getPosY() + aStepsNum, mapSizeY);
                 break;
             case "left":
-                setPosX(getPosX() - aStepsNum);
+                this.setPosX(this.getPosX() - aStepsNum, mapSizeX);
                 break;
             default:
-                System.out.println("iseemolodoypridurak");
-                break;
+                return "IncorrectDirectionException";
         }
+        return aDirection;
     }
 
     public int getFrontX() {
-        if (direction.equals("up") || direction.equals("down")) {
+        if (this.direction.equals("up") || this.direction.equals("down")) {
             return this.getPosX();
-        } else if (direction.equals("right")) {
+        } else if (this.direction.equals("right")) {
             return this.getPosX() + 1;
         } else {
             return this.getPosX() - 1;
@@ -62,9 +72,9 @@ public class Character extends MapObject {
     }
 
     public int getFrontY() {
-        if (direction.equals("right") || direction.equals("left")) {
+        if (this.direction.equals("right") || this.direction.equals("left")) {
             return this.getPosY();
-        } else if (direction.equals("down")) {
+        } else if (this.direction.equals("down")) {
             return this.getPosY() + 1;
         } else {
             return this.getPosY() - 1;

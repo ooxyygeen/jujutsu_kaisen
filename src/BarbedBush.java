@@ -1,10 +1,14 @@
-public class BarbedBush extends MapObject implements ShowInfo, Activate{
+public class BarbedBush extends MapObject{
     @Override
-    public void activate() {
-        System.out.println("You touched barbed bush and got pricked:)");
+    public String activate(Character character) {
+        if (character != null) {
+            character.changeStats("health", -1);
+            return "You touched barbed bush and got pricked :)";
+        }
+        return "NullPointerCharacterException";
     }
     @Override
-    public void showInfo() {
-        System.out.println("Barbed bush");
+    public String showInfo() {
+        return "Barbed bush";
     }
 }

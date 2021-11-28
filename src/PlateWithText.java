@@ -10,11 +10,11 @@ public class PlateWithText extends MapObject implements Activate, ShowInfo {
         setPresence(true);
     }
     @Override
-    public void activate(){
-        System.out.println("The plate says: "+text);
+    public String activate(Character character){
+        return "The plate says: "+text;
     }
     @Override
-    public void showInfo(){
-        System.out.println(getName());
+    public String showInfo(){
+        return getName();
     }
 }

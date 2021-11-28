@@ -3,7 +3,7 @@ public class Uniform implements ShowInfo{
     private int defense;
 
     public Uniform() {
-        this.name = "DeafultUniformName";
+        this.name = "DefaultUniformName";
         this.defense = 0;
     }
 
@@ -12,8 +12,7 @@ public class Uniform implements ShowInfo{
         this.defense = aDefense;
     }
     @Override
-    public void showInfo(){
-        System.out.println("Name of the uniform: "+name);
-        System.out.println("Defense of the weapon: "+defense);
+    public String showInfo(){
+        return "Name of the uniform: " + this.name + "\nDefense of the uniform: " + this.defense;
     }
 }

@@ -2,14 +2,13 @@ import java.io.*;
 import java.util.Scanner;
 
 public class Manager {
-    static MapObject[][] map = new MapObject[100][100];
+    static int mapSizeX = 100, mapSizeY = 100;
+    static MapObject[][] map = new MapObject[mapSizeY][mapSizeX];
     static int steps, obstacleX, obstacleY, actionChoice, directionOfMoving;
     static Character player = new Character();
     static String filename;
     public static void main(String[] args) throws FileNotFoundException {
-//        Character player = new Character();
         Scanner s = new Scanner(System.in);
-//        String actionChoice, filename, directionOfMoving;
         OutputStream saveFile;
         setTest();
         int menuChoice;
@@ -97,28 +96,28 @@ public class Manager {
                                 steps = player.getPosY() - obstacleY - 1;
                             }
                             swap(player, player.getPosY() - steps, player.getPosX());
-                            player.move("up", steps);
+                            player.move("up", steps, mapSizeX, mapSizeY);
                             break;
                         case 2:
                             if (isObstaclePresent("right", steps, player)) {
                                 steps = obstacleX - player.getPosX() - 1;
                             }
                             swap(player, player.getPosY(),player.getPosX() + steps);
-                            player.move("right", steps);
+                            player.move("right", steps, mapSizeX, mapSizeY);
                             break;
                         case 3:
                             if (isObstaclePresent("down", steps, player)) {
                                 steps = obstacleY - player.getPosY() - 1;
                             }
                             swap(player, player.getPosY() + steps,player.getPosX());
-                            player.move("down", steps);
+                            player.move("down", steps, mapSizeX, mapSizeY);
                             break;
                         case 4:
                             if (isObstaclePresent("left", steps, player)) {
                                 steps = player.getPosX() - obstacleX - 1;
                             }
                             swap(player, player.getPosY(),player.getPosX() - steps);
-                            player.move("left", steps);
+                            player.move("left", steps, mapSizeX, mapSizeY);
                             break;
                         default:
                             System.out.println("Try choosing moving option again");
@@ -127,7 +126,7 @@ public class Manager {
                     break;
                 case 2 :
                     if (checkFront(player)) {
-                        activate(map[player.getFrontY()][player.getFrontX()]);
+                        activate(map[player.getFrontY()][player.getFrontX()], player);
                     }
                     else
                         System.out.println("There is nothing in front of you!");
@@ -196,8 +195,14 @@ public class Manager {
             return false;
     }
 
-    public static void activate(Activate act){
-        act.activate();
+    public static void activate(Activate act, Character character){
+        String result = act.activate(character);
+            if (result.contains("Exception")){
+                System.out.println(result);
+            }
+            else {
+                /*тут треба шось придумать, шоб якось видаляти об'єкти і т.д.*/
+            }
     }
 
     public static void setTest(){
