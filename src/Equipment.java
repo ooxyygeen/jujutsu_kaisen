@@ -3,19 +3,27 @@ import java.io.Serializable;
 public class Equipment<Object> implements Serializable {
     private Weapon weapon;
     private Uniform uniform;
-//    public <T> equip;
 
-    private void equip(String aType, Object aObj) {
+    Equipment(){
+        this.weapon = new Weapon();
+        this.uniform = new Uniform();
+    }
+    public String equip(String aType, Object aObj) {
         switch (aType) {
             case "weapon":
                 this.weapon = (Weapon) aObj;
-                break;
+                return "Weapon has been successfully equipped";
             case "uniform":
                 this.uniform = (Uniform) aObj;
-                break;
+                return "Uniform has been successfully equipped";
             default:
-//                System.out.println("Incorrect equipment");
-                break;
+                return "WrongTypeOfEquipmentException";
         }
+    }
+    public Weapon getWeapon(){
+        return this.weapon;
+    }
+    public Uniform getUniform(){
+        return this.uniform;
     }
 }

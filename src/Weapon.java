@@ -15,4 +15,7 @@ public class Weapon implements ShowInfo{
     public String showInfo(){
         return "Name of the weapon: " + this.name + "\nDamage of the weapon: " + this.damage;
     }
+    public int getDamage(){
+        return this.damage;
+    }
 }

@@ -10,14 +10,6 @@ public class Character<Object> extends MapObject implements Serializable {
     private String direction;
     private ArrayList <Shikigami> shikigamis;
 
-    public String getDirection(){
-        return this.direction;
-    }
-
-    public void setDirection(String aDirection){
-        this.direction = aDirection;
-    }
-
     public Character() {
         super.setPresence(true);
 //        super.setCoordinates(0,0);
@@ -25,24 +17,41 @@ public class Character<Object> extends MapObject implements Serializable {
         super.setPosY(0,1);
         super.setName("Chelikbaser");
         this.inventory = new Inventory<>();
-        this.equipment = new Equipment<>();
+        this.equipment = new Equipment();
         this.techniques = new ArrayList<>();
+        this.techniques.add(new Technique("Fists of Van Darkholme", 10, 1, 0, 20, 10));
         this.stats = new Stats();
         this.direction = "down";
     }
-
+    public String getDirection(){
+        return this.direction;
+    }
+    public void setDirection(String aDirection){
+        this.direction = aDirection;
+    }
+    public Character(int posX, int posY, int mapSizeX, int mapSizeY, String newName,
+                     Inventory<Object> newInventory, Equipment<Object> newEquipment,
+                     ArrayList<Technique> newTechniques, Stats newStats) {
+        super.setPresence(true);
+//        super.setCoordinates(0,0);
+        super.setPosX(posX,mapSizeX);
+        super.setPosY(posY,mapSizeY);
+        super.setName(newName);
+        this.inventory = newInventory;
+        this.equipment = newEquipment;
+        this.techniques = newTechniques;
+        this.stats = newStats;
+        this.direction = "down";
+    }
     public String changeStats(String aStat, int aValue){
         return this.stats.change(aStat, aValue);
     }
-
     public String addItem(Object item){
         return this.inventory.addElement(item);
     }
-
     public boolean findItem(String item){
         return this.inventory.findElement(item);
     }
-
     public String move(String aDirection, int aStepsNum, int mapSizeX, int mapSizeY) {
         this.direction = aDirection;
         switch (aDirection) {
@@ -63,7 +72,17 @@ public class Character<Object> extends MapObject implements Serializable {
         }
         return aDirection;
     }
-
+    public Technique getTechnique(int index){
+        if (this.techniques.size() - 1 >= index)
+            return this.techniques.get(index);
+        return null;
+    }
+    public Equipment getEquipment(){
+        return this.equipment;
+    }
+    public Stats getStats(){
+        return this.stats;
+    }
     public int getFrontX() {
         if (this.direction.equals("up") || this.direction.equals("down")) {
             return this.getPosX();
@@ -73,7 +92,6 @@ public class Character<Object> extends MapObject implements Serializable {
             return this.getPosX() - 1;
         }
     }
-
     public int getFrontY() {
         if (this.direction.equals("right") || this.direction.equals("left")) {
             return this.getPosY();
