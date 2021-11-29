@@ -1,6 +1,5 @@
 import java.io.*;
 import java.util.Scanner;
-
 public class Manager {
     static int mapSizeX = 100, mapSizeY = 100;
     static MapObject[][] map = new MapObject[mapSizeY][mapSizeX];
@@ -115,7 +114,8 @@ public class Manager {
             System.out.println("""
                     1. Move
                     2. Interact
-                    3. Menu
+                    3. Fight
+                    4. Menu
 
                     Enter your choice:""");
             System.out.println("What is your option?");
@@ -177,6 +177,21 @@ public class Manager {
                         System.out.println("There is nothing in front of you!");
                     break;
                 case 3 :
+                    if (checkFront(player)) {
+                        if (map[player.getFrontY()][player.getFrontX()].getClass() == player.getClass()) {
+                            boolean result = fight(player, (Character) map[player.getFrontY()][player.getFrontX()]);
+                            if (!result)
+                                return;
+                        }
+                        else {
+                            System.out.println("There is nobody in front of you!");
+                        }
+                    }
+                    else {
+                        System.out.println("There is nobody in front of you!");
+                    }
+                    break;
+                case 4 :
                     return;
                 default :
                     System.out.println("Try choosing action option again");
@@ -196,29 +211,33 @@ public class Manager {
     public static boolean isObstaclePresent(String direction, int steps, Character player) {
         if (direction.equals("up")) {
             for (int i = player.getPosY() - 1; i >= player.getPosY() - steps; i--) {
-                if (map[i][player.getPosX()] != null && map[i][player.getPosX()].getPresence()) {
+                if (i < 0 || map[i][player.getPosX()] != null && map[i][player.getPosX()].getPresence()) {
                     obstacleY = i;
+                    obstacleX = player.getPosX();
                     return true;
                 }
             }
         } else if (direction.equals("down")) {
             for (int i = player.getPosY() + 1; i <= player.getPosY() + steps; i++) {
-                if (map[i][player.getPosX()] != null && map[i][player.getPosX()].getPresence()) {
+                if (i >= mapSizeY || map[i][player.getPosX()] != null && map[i][player.getPosX()].getPresence()) {
                     obstacleY = i;
+                    obstacleX = player.getPosX();
                     return true;
                 }
             }
         } else if (direction.equals("right")) {
             for (int i = player.getPosX() + 1; i <= player.getPosX() + steps; i++) {
-                if (map[player.getPosY()][i] != null && map[player.getPosY()][i].getPresence()) {
+                if (i >= mapSizeX || map[player.getPosY()][i] != null && map[player.getPosY()][i].getPresence()) {
                     obstacleX = i;
+                    obstacleY = player.getPosY();
                     return true;
                 }
             }
         } else if (direction.equals("left")) {
             for (int i = player.getPosX() - 1; i >= player.getPosX() - steps; i--) {
-                if (map[player.getPosY()][i] != null && map[player.getPosY()][i].getPresence()) {
+                if (i < 0 || map[player.getPosY()][i] != null && map[player.getPosY()][i].getPresence()) {
                     obstacleX = i;
+                    obstacleY = player.getPosY();
                     return true;
                 }
             }
@@ -234,7 +253,7 @@ public class Manager {
     }
 
     public static boolean checkFront(Character player) {
-        if (map[player.getFrontY()][player.getFrontX()] != null)
+        if (isInBound(player.getFrontX(),player.getFrontY()) && map[player.getFrontY()][player.getFrontX()] != null)
             return map[player.getFrontY()][player.getFrontX()].getPresence();
         else
             return false;
@@ -250,8 +269,58 @@ public class Manager {
             }
     }
 
+    public static boolean isInBound(int x, int y){
+        if (x >= 0 && x < mapSizeX && y >= 0 && y < mapSizeY){
+            return true;
+        }
+        else return false;
+    }
+
+    public static boolean fight(Character player, Character enemy){
+        while (player.getStats().getStat("health") > 0 && enemy.getStats().getStat("health") > 0){
+            if (enemy.getStats().getStat("energy") >= enemy.getTechnique(0).getStat("cost")) {
+                player.getStats().change("health",
+                - (enemy.getStats().getStat("strength")
+                + enemy.getEquipment().getWeapon().getDamage()
+                + (enemy.getTechnique(0).getStat("accuracy") / 100)
+                * enemy.getTechnique(0).getStat("damage"))
+                * (1 - player.getEquipment().getUniform().getDefense() / 50));
+            }
+            else{
+                player.getStats().change("health",
+                - (enemy.getStats().getStat("strength")
+                + enemy.getEquipment().getWeapon().getDamage())
+                * (1 - player.getEquipment().getUniform().getDefense() / 50));
+            }
+            if (player.getStats().getStat("energy") >= player.getTechnique(0).getStat("cost")) {
+                enemy.getStats().change("health",
+                - (player.getStats().getStat("strength")
+                + enemy.getEquipment().getWeapon().getDamage()
+                + (player.getTechnique(0).getStat("accuracy") / 100)
+                * player.getTechnique(0).getStat("damage"))
+                * (1 - enemy.getEquipment().getUniform().getDefense() / 50));
+            }
+            else {
+                enemy.getStats().change("health",
+                - (player.getStats().getStat("strength")
+                + player.getEquipment().getWeapon().getDamage())
+                * (1 - enemy.getEquipment().getUniform().getDefense() / 50));
+            }
+        }
+        if (player.getStats().getStat("health") < 1){
+            System.out.println("You have died in the battle )-;");
+            return false;
+        }
+        else{
+            System.out.println("You have won the battle, congratz! (-;");
+            return true;
+        }
+
+    }
+
     public static void setTest(){
         map[0][0] = player;
         map[7][2] = new PlateWithText("Congrats, you have moved!");
+        map[8][2] = new Character();
     }
 }

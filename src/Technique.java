@@ -1,20 +1,46 @@
 public class Technique {
     private final String name;
-    private int damage, range, heal, accuracy;
+    /*
+    0 - damage
+    1 - range
+    2 - heal
+    3 - accuracy
+    4 - cost
+    */
+    private final int[] stats;
 
     public Technique() {
         this.name = "DefaultTechniqueName";
-        this.damage = 0;
-        this.range = 0;
-        this.heal = 0;
-        this.accuracy = 0;
+        this.stats = new int[]{0, 0, 0, 0, 0};
     }
 
-    public Technique(String aName, int aDamage, int aRange, int aHeal, int aAccuracy) {
-        this.name =aName;
-        this.damage = aDamage;
-        this.range = aRange;
-        this.heal = aHeal;
-        this.accuracy = aAccuracy;
+    public String getName(){
+        return this.name;
+    }
+
+    public Technique(String aName, int aDamage, int aRange, int aHeal, int aAccuracy, int aCost) {
+        this.name = aName;
+        this.stats = new int[]{aDamage,aRange,aHeal,aAccuracy, aCost};
+    }
+
+    public int getStat(String aStat){
+        switch (aStat) {
+            case "damage":
+                return this.stats[0];
+            case "range":
+                return this.stats[1];
+            case "heal":
+                return this.stats[2];
+            case "accuracy":
+                return this.stats[3];
+            case "cost":
+                return this.stats[4];
+            default:
+                return 0;
+        }
+    }
+
+    public int[] getAllStats() {
+        return this.stats;
     }
 }

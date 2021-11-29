@@ -22,20 +22,22 @@ public class MapObject implements ShowInfo, Activate {
         if (newPosX >= 0 && newPosX < mapSizeX) {
             this.posX = newPosX;
         }
-        if (newPosX < 0){
+        else if (newPosX < 0){
             this.posX = 0;
         }
-        this.posX = mapSizeX - 1;
+        else
+            this.posX = mapSizeX - 1;
     }
 
     public void setPosY(int newPosY, int mapSizeY) {
         if (newPosY >= 0 && newPosY < mapSizeY) {
             this.posY = newPosY;
         }
-        if (newPosY < 0){
+        else if (newPosY < 0){
             this.posY = 0;
         }
-        this.posY = mapSizeY - 1;
+        else
+            this.posY = mapSizeY - 1;
     }
 
     public int getPosX() {
