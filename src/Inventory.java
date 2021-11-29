@@ -1,8 +1,10 @@
+import java.io.Serializable;
+import java.rmi.ServerError;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.ListIterator;
 
-public class Inventory<Object> {
+public class Inventory<Object> implements Serializable {
     private ArrayList<Object> inventory;
 
     public Inventory() {

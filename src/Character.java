@@ -1,13 +1,14 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Character<Object> extends MapObject {
+public class Character<Object> extends MapObject implements Serializable {
     private Inventory<Object> inventory;
     private Equipment equipment;
     private Stats stats;
     private ArrayList <Technique> techniques;
     private Technique domainExpansion;
-
     private String direction;
+    private ArrayList <Shikigami> shikigamis;
 
     public String getDirection(){
         return this.direction;
@@ -19,7 +20,9 @@ public class Character<Object> extends MapObject {
 
     public Character() {
         super.setPresence(true);
-        super.setCoordinates(0,0);
+//        super.setCoordinates(0,0);
+        super.setPosX(0,1);
+        super.setPosY(0,1);
         super.setName("Chelikbaser");
         this.inventory = new Inventory<>();
         this.equipment = new Equipment<>();

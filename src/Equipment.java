@@ -1,9 +1,11 @@
-public class Equipment<T> {
+import java.io.Serializable;
+
+public class Equipment<Object> implements Serializable {
     private Weapon weapon;
     private Uniform uniform;
 //    public <T> equip;
 
-    private void equip(String aType, T aObj) {
+    private void equip(String aType, Object aObj) {
         switch (aType) {
             case "weapon":
                 this.weapon = (Weapon) aObj;

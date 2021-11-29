@@ -7,11 +7,25 @@ public class Manager {
     static int steps, obstacleX, obstacleY, actionChoice, directionOfMoving;
     static Character player = new Character();
     static String filename;
-    public static void main(String[] args) throws FileNotFoundException {
+    static FileWriter fileSession;
+
+    static {
+        try {
+            fileSession = new FileWriter("lastSession.txt", false);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Something went wrong...");
+            System.exit(2);
+        }
+    }
+
+    public static void main(String[] args) throws IOException {
         Scanner s = new Scanner(System.in);
-        OutputStream saveFile;
+        FileOutputStream saveFile = null;
+        ObjectOutputStream oos = null;
+        ObjectInputStream ois = null;
         setTest();
-        int menuChoice;
+        int menuChoice, exitChoice;
         while (true) {
             System.out.println("""
                     Welcome to Jujutsu Kaisen game.
@@ -27,32 +41,63 @@ public class Manager {
                     Enter your choice:""");
             menuChoice = s.nextInt();
             switch (menuChoice) {
-                case 1 :
+                case 1:
                     System.out.println("Enter session name");
+                    s.nextLine();
                     filename = s.nextLine();
                     saveFile = new FileOutputStream(filename + ".dat");
+                    game();
                     break;
-                case 2 :
+                case 2:
                     // continue game, if it's started or start last session
                     game();
                     break;
-                case 3 :
+                case 3:
                     // choose session
+                    System.out.println("Enter name of your session:");
+                    s.nextLine();
+                    filename = s.nextLine();
                     // read data from file
-                    // getter from MapObject
+                    try {
+                        ois = new ObjectInputStream(new FileInputStream(filename + ".dat"));
+                        player = (Character) ois.readObject();
+                    } catch (IOException | ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
                     game();
                     break;
-                case 4 :
+                case 4:
                     // write data to file from current session
+                    try {
+                    oos = new ObjectOutputStream(saveFile);
+                    oos.writeObject(player);
+                    oos.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     break;
-                case 5 :
+                case 5:
                     // instruction to the game(keyboard, goals, tips)
                     break;
-                case 6 :
-                    // close savefile
-                    // exit program
-                    return;
-                default :
+                case 6:
+                    System.out.println("""
+                    Are you sure you want to exit? Unsaved experience will be deleted.
+                    Exit (0)
+                    Menu (1)
+                    Enter your choice:""");
+                    exitChoice = s.nextInt();
+                    switch (exitChoice) {
+                        case 0:
+                            fileSession.write(filename);
+                            fileSession.flush();
+                            return;
+                        case 1:
+                            break;
+                        default:
+                            System.out.println("Something went wrong. Try again.");
+                            break;
+                    }
+                default:
                     System.out.println("Something went wrong. Try again.");
                     break;
             }

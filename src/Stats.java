@@ -1,4 +1,6 @@
-public class Stats {
+import java.io.Serializable;
+
+public class Stats implements Serializable {
     private int strength, intelligence, luck, agility, health, energy;
 
     public Stats() {

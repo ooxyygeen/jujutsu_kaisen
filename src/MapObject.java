@@ -1,9 +1,11 @@
+import java.io.Serializable;
 
-public class MapObject implements ShowInfo, Activate{
+public class MapObject implements ShowInfo, Activate {
     private Coordinates coordinates;
     private String name;
     private boolean presence;
     private int posX, posY;
+
     public MapObject(){
         this.presence = false;
     }
