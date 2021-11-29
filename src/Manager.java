@@ -1,11 +1,13 @@
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Scanner;
+
 public class Manager {
     static int mapSizeX = 100, mapSizeY = 100;
     static MapObject[][] map = new MapObject[mapSizeY][mapSizeX];
     static int steps, obstacleX, obstacleY, actionChoice, directionOfMoving;
     static Character player = new Character();
-    static String filename;
+    static String filename = "";
     static FileWriter fileSession;
 
     static {
@@ -44,11 +46,20 @@ public class Manager {
                     System.out.println("Enter session name");
                     s.nextLine();
                     filename = s.nextLine();
+                    while (filename == null && filename.trim().isEmpty()) {
+                        System.out.println("Please, enter the session name.");
+                        s.nextLine();
+                        filename = s.nextLine();
+                    }
                     saveFile = new FileOutputStream(filename + ".dat");
                     game();
                     break;
                 case 2:
                     // continue game, if it's started or start last session
+                    if(filename == null && filename.trim().isEmpty()) {
+                        System.out.println("Please, choose the session first.");
+                        break;
+                    }
                     game();
                     break;
                 case 3:
@@ -62,6 +73,8 @@ public class Manager {
                         player = (Character) ois.readObject();
                     } catch (IOException | ClassNotFoundException e) {
                         e.printStackTrace();
+                        System.out.println("Something went wrong. Try again:(");
+                        break;
                     }
                     game();
                     break;
@@ -73,6 +86,8 @@ public class Manager {
                     oos.close();
                     } catch (IOException e) {
                         e.printStackTrace();
+                        System.out.println("Something went wrong. Try again:(");
+                        break;
                     }
                     break;
                 case 5:
@@ -188,7 +203,7 @@ public class Manager {
                         }
                     }
                     else {
-                        System.out.println("There is nobody in front of you!");
+                        System.out.println("There is nobody in front of you!"); // nothing получается
                     }
                     break;
                 case 4 :
@@ -277,7 +292,10 @@ public class Manager {
     }
 
     public static boolean fight(Character player, Character enemy){
+        int i = 1;
         while (player.getStats().getStat("health") > 0 && enemy.getStats().getStat("health") > 0){
+            System.out.println(i + ". Your health: " + player.getStats().getStat("health") + "\n"
+                    + "   Enemy's health: " + enemy.getStats().getStat("health"));
             if (enemy.getStats().getStat("energy") >= enemy.getTechnique(0).getStat("cost")) {
                 player.getStats().change("health",
                 - (enemy.getStats().getStat("strength")
@@ -306,21 +324,29 @@ public class Manager {
                 + player.getEquipment().getWeapon().getDamage())
                 * (1 - enemy.getEquipment().getUniform().getDefense() / 50));
             }
+            i++;
         }
         if (player.getStats().getStat("health") < 1){
             System.out.println("You have died in the battle )-;");
             return false;
         }
         else{
-            System.out.println("You have won the battle, congratz! (-;");
+            System.out.println("You have won the battle, congrats! (-;");
             return true;
         }
 
     }
-
+// .equip("uniform", new Uniform("Jujutsu Tech uniform", 10))
+//    "Ten Shadows Technique", 1, 20, 0, 50, 10
     public static void setTest(){
         map[0][0] = player;
         map[7][2] = new PlateWithText("Congrats, you have moved!");
-        map[8][2] = new Character();
+        Character fushi = new Character(2, 8, mapSizeX, mapSizeY, "Megumi Fushiguro", new Inventory(),
+                new Equipment(),
+                new ArrayList<Technique>(),
+                new Stats(35, 80, 20, 50, 100, 100));
+        fushi.addTechnique("Ten Shadows Technique", 1, 20, 0, 50, 10);
+        map[8][1] = fushi;
+
     }
 }

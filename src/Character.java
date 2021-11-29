@@ -23,15 +23,9 @@ public class Character<Object> extends MapObject implements Serializable {
         this.stats = new Stats();
         this.direction = "down";
     }
-    public String getDirection(){
-        return this.direction;
-    }
-    public void setDirection(String aDirection){
-        this.direction = aDirection;
-    }
     public Character(int posX, int posY, int mapSizeX, int mapSizeY, String newName,
-                     Inventory<Object> newInventory, Equipment<Object> newEquipment,
-                     ArrayList<Technique> newTechniques, Stats newStats) {
+                      Inventory<Object> newInventory, Equipment<Object> newEquipment,
+                      ArrayList<Technique> newTechniques, Stats newStats) {
         super.setPresence(true);
 //        super.setCoordinates(0,0);
         super.setPosX(posX,mapSizeX);
@@ -42,6 +36,12 @@ public class Character<Object> extends MapObject implements Serializable {
         this.techniques = newTechniques;
         this.stats = newStats;
         this.direction = "down";
+    }
+    public String getDirection(){
+        return this.direction;
+    }
+    public void setDirection(String aDirection){
+        this.direction = aDirection;
     }
     public String changeStats(String aStat, int aValue){
         return this.stats.change(aStat, aValue);
@@ -76,6 +76,9 @@ public class Character<Object> extends MapObject implements Serializable {
         if (this.techniques.size() - 1 >= index)
             return this.techniques.get(index);
         return null;
+    }
+    public void addTechnique(String aName, int aDamage, int aRange, int aHeal, int aAccuracy, int aCost) {
+        techniques.add(new Technique(aName, aDamage, aRange, aHeal, aAccuracy, aCost));
     }
     public Equipment getEquipment(){
         return this.equipment;
