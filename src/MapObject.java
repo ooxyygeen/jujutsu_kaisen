@@ -1,5 +1,3 @@
-import java.io.Serializable;
-
 public class MapObject implements ShowInfo, Activate {
     private Coordinates coordinates;
     private String name;

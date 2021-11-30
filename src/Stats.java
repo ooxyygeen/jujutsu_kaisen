@@ -15,6 +15,10 @@ public class Stats implements Serializable {
         stats = new int[]{1, 1, 1, 1, 100, 100};
     }
 
+    public Stats(int aStrength, int aIntel, int aLuck, int aAgility, int aHealth, int aEnergy) {
+        stats = new int[]{aStrength, aIntel, aLuck, aAgility, aHealth, aEnergy};
+    }
+
     public int getStat(String aStat){
         switch (aStat) {
             case "strength":

@@ -6,6 +6,7 @@ public class Technique {
     2 - heal
     3 - accuracy
     4 - cost
+    5 - shikigami (0 - absent, 1 - present)
     */
     private final int[] stats;
 
@@ -14,13 +15,13 @@ public class Technique {
         this.stats = new int[]{0, 0, 0, 0, 0};
     }
 
-    public String getName(){
-        return this.name;
-    }
-
     public Technique(String aName, int aDamage, int aRange, int aHeal, int aAccuracy, int aCost) {
         this.name = aName;
         this.stats = new int[]{aDamage,aRange,aHeal,aAccuracy, aCost};
+    }
+
+    public String getName(){
+        return this.name;
     }
 
     public int getStat(String aStat){
