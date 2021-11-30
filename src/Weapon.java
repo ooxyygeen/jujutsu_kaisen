@@ -1,4 +1,6 @@
-public class Weapon implements ShowInfo{
+import java.io.Serializable;
+
+public class Weapon implements ShowInfo, Serializable {
     private final String name;
     private final int damage;
 

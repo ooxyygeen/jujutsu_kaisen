@@ -51,7 +51,6 @@ public class Manager {
                         s.nextLine();
                         filename = s.nextLine();
                     }
-                    saveFile = new FileOutputStream(filename + ".dat");
                     game();
                     break;
                 case 2:
@@ -80,9 +79,10 @@ public class Manager {
                     break;
                 case 4:
                     // write data to file from current session
+                    saveFile = new FileOutputStream(filename + ".dat");
                     try {
                     oos = new ObjectOutputStream(saveFile);
-                    oos.writeObject(player);
+                    oos.writeObject(map[player.getPosY()][player.getPosX()]);
                     oos.close();
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -186,7 +186,7 @@ public class Manager {
                     break;
                 case 2 :
                     if (checkFront(player)) {
-                        activate(map[player.getFrontY()][player.getFrontX()], player);
+                        System.out.println(activate(map[player.getFrontY()][player.getFrontX()], player));
                     }
                     else
                         System.out.println("There is nothing in front of you!");
@@ -274,14 +274,12 @@ public class Manager {
             return false;
     }
 
-    public static void activate(Activate act, Character character){
+    public static String activate(Activate act, Character character){
         String result = act.activate(character);
-            if (result.contains("Exception")){
-                System.out.println(result);
-            }
-            else {
-                /*тут треба шось придумать, шоб якось видаляти об'єкти і т.д.*/
-            }
+        if (result.contains("destroyed")){
+            map[character.getFrontY()][character.getFrontX()] = null;
+        }
+        return result;
     }
 
     public static boolean isInBound(int x, int y){
@@ -339,14 +337,16 @@ public class Manager {
 // .equip("uniform", new Uniform("Jujutsu Tech uniform", 10))
 //    "Ten Shadows Technique", 1, 20, 0, 50, 10
     public static void setTest(){
-        map[0][0] = player;
+        map[player.getPosY()][player.getPosX()] = player;
         map[7][2] = new PlateWithText("Congrats, you have moved!");
         Character fushi = new Character(2, 8, mapSizeX, mapSizeY, "Megumi Fushiguro", new Inventory(),
                 new Equipment(),
                 new ArrayList<Technique>(),
                 new Stats(35, 80, 20, 50, 100, 100));
         fushi.addTechnique("Ten Shadows Technique", 1, 20, 0, 50, 10);
-        map[8][1] = fushi;
-
+        map[8][2] = fushi;
+        map[9][2] = new TotemOfDexterity();
+        map[10][2] = new PaperWall();
+        map[11][2] = new BarbedBush();
     }
 }

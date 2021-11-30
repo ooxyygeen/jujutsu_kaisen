@@ -1,4 +1,6 @@
-public class Uniform implements ShowInfo{
+import java.io.Serializable;
+
+public class Uniform implements ShowInfo, Serializable {
     private String name;
     private int defense;
 
