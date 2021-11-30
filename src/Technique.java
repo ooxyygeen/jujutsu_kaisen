@@ -1,4 +1,6 @@
-public class Technique {
+import java.io.Serializable;
+
+public class Technique implements Serializable {
     private final String name;
     /*
     0 - damage
