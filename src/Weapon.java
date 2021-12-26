@@ -13,6 +13,9 @@ public class Weapon implements ShowInfo, Serializable {
         this.name = aName;
         this.damage = aDamage;
     }
+    public String getName(){
+        return this.name;
+    }
     @Override
     public String showInfo(){
         return "Name of the weapon: " + this.name + "\nDamage of the weapon: " + this.damage;

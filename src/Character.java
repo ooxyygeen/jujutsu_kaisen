@@ -1,5 +1,6 @@
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Character<Object> extends MapObject implements Serializable {
     private Inventory<Object> inventory;
@@ -9,13 +10,15 @@ public class Character<Object> extends MapObject implements Serializable {
     private Technique domainExpansion;
     private String direction;
     private ArrayList <Shikigami> shikigamis;
-
+    private final boolean availabilityOfInnerSukuna;
+    private boolean innerSukuna = false;
     public Character() {
         super.setPresence(true);
 //        super.setCoordinates(0,0);
         super.setPosX(0,1);
         super.setPosY(0,1);
         super.setName("Chelikbaser");
+        this.availabilityOfInnerSukuna = false;
         this.inventory = new Inventory<>();
         this.equipment = new Equipment();
         this.techniques = new ArrayList<>();
@@ -24,13 +27,15 @@ public class Character<Object> extends MapObject implements Serializable {
         this.direction = "down";
     }
     public Character(int posX, int posY, int mapSizeX, int mapSizeY, String newName,
-                      Inventory<Object> newInventory, Equipment<Object> newEquipment,
-                      ArrayList<Technique> newTechniques, Stats newStats) {
+                     boolean newAvOfSukuna, Inventory<Object> newInventory,
+                     Equipment<Object> newEquipment, ArrayList<Technique> newTechniques,
+                     Stats newStats) {
         super.setPresence(true);
 //        super.setCoordinates(0,0);
         super.setPosX(posX,mapSizeX);
         super.setPosY(posY,mapSizeY);
         super.setName(newName);
+        this.availabilityOfInnerSukuna = newAvOfSukuna;
         this.inventory = newInventory;
         this.equipment = newEquipment;
         this.techniques = newTechniques;
@@ -43,8 +48,11 @@ public class Character<Object> extends MapObject implements Serializable {
     public void setDirection(String aDirection){
         this.direction = aDirection;
     }
-    public String changeStats(String aStat, int aValue){
-        return this.stats.change(aStat, aValue);
+    public String changeCurStats(String aStat, int aValue){
+        return this.stats.changeCurStat(aStat, aValue);
+    }
+    public String changeMaxStats(String aStat, int aValue){
+        return this.stats.changeMaxStat(aStat, aValue);
     }
     public String addItem(Object item){
         return this.inventory.addElement(item);
@@ -83,8 +91,20 @@ public class Character<Object> extends MapObject implements Serializable {
     public Equipment getEquipment(){
         return this.equipment;
     }
-    public Stats getStats(){
-        return this.stats;
+    public int getStat(String aStat){
+        return this.stats.getStat(aStat);
+    }
+    public int[] getAllStats(){
+        return this.stats.getAllStats();
+    }
+    public String changeCurStat(String aStat, int aNum){
+        return this.stats.changeCurStat(aStat, aNum);
+    }
+    public String changeMaxStat(String aStat, int aNum){
+        return this.stats.changeMaxStat(aStat, aNum);
+    }
+    public String sukunaPower(){
+        return this.stats.sukunaPower(inventory.countOfObjects(FingerOfSukuna.class));
     }
     public int getFrontX() {
         if (this.direction.equals("up") || this.direction.equals("down")) {
