@@ -9,7 +9,7 @@ public class TotemOfDexterity extends MapObject{
     @Override
     public String activate(Character character){
         if (character != null) {
-            return character.changeStats("agility", 1);
+            return character.changeMaxStats("agility", 1);
         }
         return "CharacterNullPointerException";
     }

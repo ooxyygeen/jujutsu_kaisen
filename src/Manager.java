@@ -4,12 +4,12 @@ import java.util.Scanner;
 
 public class Manager {
     static int mapSizeX = 100, mapSizeY = 100;
-    static MapObject[][] map = new MapObject[mapSizeY][mapSizeX];
+    static GameMap gameMap = new GameMap(mapSizeY, mapSizeX);
     static int steps, obstacleX, obstacleY, actionChoice, directionOfMoving;
     static Character player = new Character();
     static String filename = "";
     static FileWriter fileSession;
-
+    static Quests quests = new Quests();
     static {
         try {
             fileSession = new FileWriter("lastSession.txt", false);
@@ -82,7 +82,7 @@ public class Manager {
                     saveFile = new FileOutputStream(filename + ".dat");
                     try {
                     oos = new ObjectOutputStream(saveFile);
-                    oos.writeObject(map[player.getPosY()][player.getPosX()]);
+                    oos.writeObject(gameMap.map[player.getPosY()][player.getPosX()]);
                     oos.close();
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -186,15 +186,15 @@ public class Manager {
                     break;
                 case 2 :
                     if (checkFront(player)) {
-                        System.out.println(activate(map[player.getFrontY()][player.getFrontX()], player));
+                        System.out.println(activate((MapObject)gameMap.map[player.getFrontY()][player.getFrontX()], player));
                     }
                     else
                         System.out.println("There is nothing in front of you!");
                     break;
                 case 3 :
                     if (checkFront(player)) {
-                        if (map[player.getFrontY()][player.getFrontX()].getClass() == player.getClass()) {
-                            boolean result = fight(player, (Character) map[player.getFrontY()][player.getFrontX()]);
+                        if (gameMap.map[player.getFrontY()][player.getFrontX()].getClass() == player.getClass()) {
+                            boolean result = fight(player, (Character) gameMap.map[player.getFrontY()][player.getFrontX()]);
                             if (!result)
                                 return;
                         }
@@ -220,13 +220,13 @@ public class Manager {
     }
 
     public static void swap(MapObject first, int Y, int X){
-        map[Y][X] = first;
-        map[first.getPosY()][first.getPosX()] = null;
+        gameMap.map[Y][X] = first;
+        gameMap.map[first.getPosY()][first.getPosX()] = null;
     }
     public static boolean isObstaclePresent(String direction, int steps, Character player) {
         if (direction.equals("up")) {
             for (int i = player.getPosY() - 1; i >= player.getPosY() - steps; i--) {
-                if (i < 0 || map[i][player.getPosX()] != null && map[i][player.getPosX()].getPresence()) {
+                if (i < 0 || gameMap.map[i][player.getPosX()] != null && ((MapObject)gameMap.map[i][player.getPosX()]).getPresence()) {
                     obstacleY = i;
                     obstacleX = player.getPosX();
                     return true;
@@ -234,7 +234,7 @@ public class Manager {
             }
         } else if (direction.equals("down")) {
             for (int i = player.getPosY() + 1; i <= player.getPosY() + steps; i++) {
-                if (i >= mapSizeY || map[i][player.getPosX()] != null && map[i][player.getPosX()].getPresence()) {
+                if (i >= mapSizeY || gameMap.map[i][player.getPosX()] != null && ((MapObject)gameMap.map[i][player.getPosX()]).getPresence()) {
                     obstacleY = i;
                     obstacleX = player.getPosX();
                     return true;
@@ -242,7 +242,7 @@ public class Manager {
             }
         } else if (direction.equals("right")) {
             for (int i = player.getPosX() + 1; i <= player.getPosX() + steps; i++) {
-                if (i >= mapSizeX || map[player.getPosY()][i] != null && map[player.getPosY()][i].getPresence()) {
+                if (i >= mapSizeX || gameMap.map[player.getPosY()][i] != null && ((MapObject)gameMap.map[player.getPosY()][i]).getPresence()) {
                     obstacleX = i;
                     obstacleY = player.getPosY();
                     return true;
@@ -250,7 +250,7 @@ public class Manager {
             }
         } else if (direction.equals("left")) {
             for (int i = player.getPosX() - 1; i >= player.getPosX() - steps; i--) {
-                if (i < 0 || map[player.getPosY()][i] != null && map[player.getPosY()][i].getPresence()) {
+                if (i < 0 || gameMap.map[player.getPosY()][i] != null && ((MapObject)gameMap.map[player.getPosY()][i]).getPresence()) {
                     obstacleX = i;
                     obstacleY = player.getPosY();
                     return true;
@@ -263,13 +263,18 @@ public class Manager {
     public static void update(){
         // checkers for events
         if (checkFront(player)) {
-            System.out.println("There is " + map[player.getFrontY()][player.getFrontX()].getName() + " in front of you");
+            System.out.println("There is " + ((MapObject)gameMap.map[player.getFrontY()][player.getFrontX()]).getName() + " in front of you");
         }
+        if (player.getStat("health") < 1){
+            System.out.println("You have died, you can load your save or start the new game :-/");
+        }
+        quests.updateQuestsStatus(player);
+        quests.showMainQuest();
     }
 
     public static boolean checkFront(Character player) {
-        if (isInBound(player.getFrontX(),player.getFrontY()) && map[player.getFrontY()][player.getFrontX()] != null)
-            return map[player.getFrontY()][player.getFrontX()].getPresence();
+        if (isInBound(player.getFrontX(),player.getFrontY()) && gameMap.map[player.getFrontY()][player.getFrontX()] != null)
+            return ((MapObject)gameMap.map[player.getFrontY()][player.getFrontX()]).getPresence();
         else
             return false;
     }
@@ -277,7 +282,7 @@ public class Manager {
     public static String activate(Activate act, Character character){
         String result = act.activate(character);
         if (result.contains("destroyed")){
-            map[character.getFrontY()][character.getFrontX()] = null;
+            gameMap.map[character.getFrontY()][character.getFrontX()] = null;
         }
         return result;
     }
@@ -291,45 +296,45 @@ public class Manager {
 
     public static boolean fight(Character player, Character enemy){
         int i = 1;
-        while (player.getStats().getStat("health") > 0 && enemy.getStats().getStat("health") > 0){
-            System.out.println(i + ". Your health: " + player.getStats().getStat("health") + "\n"
-                    + "   Enemy's health: " + enemy.getStats().getStat("health"));
-            if (enemy.getStats().getStat("energy") >= enemy.getTechnique(0).getStat("cost")) {
-                player.getStats().change("health",
-                - (enemy.getStats().getStat("strength")
+        while (player.getStat("health") > 0 && enemy.getStat("health") > 0){
+            System.out.println(i + ". Your health: " + player.getStat("health") + "\n"
+                    + "   Enemy's health: " + enemy.getStat("health"));
+            if (enemy.getStat("energy") >= enemy.getTechnique(0).getStat("cost")) {
+                player.changeCurStat("health",
+                - (enemy.getStat("strength")
                 + enemy.getEquipment().getWeapon().getDamage()
                 + (enemy.getTechnique(0).getStat("accuracy") / 100)
                 * enemy.getTechnique(0).getStat("damage"))
                 * (1 - player.getEquipment().getUniform().getDefense() / 50));
             }
             else{
-                player.getStats().change("health",
-                - (enemy.getStats().getStat("strength")
+                player.changeCurStat("health",
+                - (enemy.getStat("strength")
                 + enemy.getEquipment().getWeapon().getDamage())
                 * (1 - player.getEquipment().getUniform().getDefense() / 50));
             }
-            if (player.getStats().getStat("energy") >= player.getTechnique(0).getStat("cost")) {
-                enemy.getStats().change("health",
-                - (player.getStats().getStat("strength")
+            if (player.getStat("energy") >= player.getTechnique(0).getStat("cost")) {
+                enemy.changeCurStat("health",
+                - (player.getStat("strength")
                 + enemy.getEquipment().getWeapon().getDamage()
                 + (player.getTechnique(0).getStat("accuracy") / 100)
                 * player.getTechnique(0).getStat("damage"))
                 * (1 - enemy.getEquipment().getUniform().getDefense() / 50));
             }
             else {
-                enemy.getStats().change("health",
-                - (player.getStats().getStat("strength")
+                enemy.changeCurStat("health",
+                - (player.getStat("strength")
                 + player.getEquipment().getWeapon().getDamage())
                 * (1 - enemy.getEquipment().getUniform().getDefense() / 50));
             }
             i++;
         }
-        if (player.getStats().getStat("health") < 1){
+        if (player.getStat("health") < 1){
             System.out.println("You have died in the battle )-;");
             return false;
         }
         else{
-            System.out.println("You have won the battle, congrats! (-;");
+            System.out.println("You have won the battle, congrats! ;-)");
             return true;
         }
 
@@ -337,16 +342,18 @@ public class Manager {
 // .equip("uniform", new Uniform("Jujutsu Tech uniform", 10))
 //    "Ten Shadows Technique", 1, 20, 0, 50, 10
     public static void setTest(){
-        map[player.getPosY()][player.getPosX()] = player;
-        map[7][2] = new PlateWithText("Congrats, you have moved!");
-        Character fushi = new Character(2, 8, mapSizeX, mapSizeY, "Megumi Fushiguro", new Inventory(),
+        gameMap.map[player.getPosY()][player.getPosX()] = player;
+        gameMap.map[7][2] = new PlateWithText("Congrats, you have moved!");
+        Character fushi = new Character(2, 8, mapSizeX, mapSizeY, "Megumi Fushiguro",
+                false,
+                new Inventory(),
                 new Equipment(),
                 new ArrayList<Technique>(),
                 new Stats(35, 80, 20, 50, 100, 100));
         fushi.addTechnique("Ten Shadows Technique", 1, 20, 0, 50, 10);
-        map[8][2] = fushi;
-        map[9][2] = new TotemOfDexterity();
-        map[10][2] = new PaperWall();
-        map[11][2] = new BarbedBush();
+        gameMap.map[8][2] = fushi;
+        gameMap.map[9][2] = new TotemOfDexterity();
+        gameMap.map[10][2] = new PaperWall();
+        gameMap.map[11][2] = new BarbedBush();
     }
 }
