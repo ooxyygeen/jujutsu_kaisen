@@ -1,26 +1,27 @@
-import java.lang.reflect.Array;
+import java.io.Serializable;
 import java.util.Arrays;
 
-public class Quests {
-    private int curNumberOfQuest = 0, totalQuests = 2;
+public class Quests implements Serializable {
+    private int curNumberOfMainQuest = 0, totalCountOfMainQuests = 2;
     private boolean[] quests;
     public Quests(){
-        quests = new boolean[totalQuests];
-        Arrays.fill(quests, true);
+        quests = new boolean[totalCountOfMainQuests];
+        Arrays.fill(this.quests, true);
     }
     public void updateQuestsStatus(Character player){
-        if (player.getEquipment().getWeapon().getName().equals("Sock with soap") && quests[0]) {
-            quests[0] = false;
-            quests[1] = true;
-            curNumberOfQuest++;
+        if (player.getEquipment().getWeapon().getName().equals("Sock with soap") && this.quests[0]) {
+
+            this.quests[0] = false;
+            this.curNumberOfMainQuest++;
         }
-        else if (player.findItem("Finger of Sukuna") && quests[1]){
-            quests[1] = false;
-            curNumberOfQuest++;
+        else if (player.findItem("Finger of Sukuna") && this.quests[1]){
+            System.out.println(player.findItem("Finger of Sukuna"));
+            this.quests[1] = false;
+            this.curNumberOfMainQuest++;
         }
     }
     public void showMainQuest(){
-        switch (curNumberOfQuest){
+        switch (this.curNumberOfMainQuest){
             case 0:
                 System.out.println("""
                         Your quest is:

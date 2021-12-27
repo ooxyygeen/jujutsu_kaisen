@@ -96,6 +96,12 @@ public class Character<Object> extends MapObject implements Serializable {
     public Equipment getEquipment(){
         return this.equipment;
     }
+    public String equipWeapon(String nameOfWeapon){
+        return equipment.equip("weapon", this.inventory.getItem(nameOfWeapon));
+    }
+    public String equipUniform(String nameOfUniform){
+        return equipment.equip("uniform", this.inventory.getItem(nameOfUniform));
+    }
     public int getStat(String aStat){
         return this.stats.getStat(aStat);
     }

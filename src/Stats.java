@@ -104,7 +104,7 @@ public class Stats implements Serializable {
             default:
                 return "IncorrectIncomingStatException";
         }
-        return "new stats are applied";
+        return "New stats are applied";
     }
     public String changeCurStat(String aStat, int aNum) {
         switch (aStat) {

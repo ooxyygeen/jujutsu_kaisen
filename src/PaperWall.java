@@ -1,4 +1,6 @@
-public class PaperWall extends MapObject{
+import java.io.Serializable;
+
+public class PaperWall extends MapObject {
     PaperWall(){
         super.setName("Paper wall");
     }

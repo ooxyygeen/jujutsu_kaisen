@@ -21,7 +21,7 @@ public class ChestWithSockWithSoap extends MapObject{
     @Override
     public String activate(Character character){
         if (character != null){
-            return character.addItem(new Weapon("Sock with soap", 3));
+            return character.getEquipment().equip("weapon", new Weapon("Sock with soap", 3));
         }
         return "CharacterNullPointerException";
     }
