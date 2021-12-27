@@ -1,4 +1,6 @@
-public class BarbedBush extends MapObject{
+import java.io.Serializable;
+
+public class BarbedBush extends MapObject implements Serializable {
     @Override
     public String activate(Character character) {
         if (character != null) {

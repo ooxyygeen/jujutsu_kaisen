@@ -1,15 +1,16 @@
+import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.Arrays;
 
-public class Quests {
+public class Quests implements Serializable {
     private int curNumberOfQuest = 0, totalQuests = 2;
-    private boolean[] quests;
+    private boolean[] quests; // false - пройденый уровень; true - доступный уровень
     public Quests(){
         quests = new boolean[totalQuests];
         Arrays.fill(quests, true);
     }
     public void updateQuestsStatus(Character player){
-        if (player.getEquipment().getWeapon().getName().equals("Sock with soap")) {
+        if (player.getEquipment().getWeapon().getName().equals("Sock with soap") && quests[0]) {
             quests[0] = false;
             quests[1] = true;
             curNumberOfQuest++;

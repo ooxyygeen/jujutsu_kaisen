@@ -22,10 +22,11 @@ public class Manager {
 
     public static void main(String[] args) throws IOException {
         Scanner s = new Scanner(System.in);
-        FileOutputStream saveFile = null;
+        FileOutputStream saveFilePlayer = null;
+        FileOutputStream saveFileMap = null;
         ObjectOutputStream oos = null;
         ObjectInputStream ois = null;
-        setTest();
+
         int menuChoice, exitChoice;
         while (true) {
             System.out.println("""
@@ -42,7 +43,7 @@ public class Manager {
                     Enter your choice:""");
             menuChoice = s.nextInt();
             switch (menuChoice) {
-                case 1:
+                case 1: // NEW GAME
                     System.out.println("Enter session name");
                     s.nextLine();
                     filename = s.nextLine();
@@ -51,9 +52,10 @@ public class Manager {
                         s.nextLine();
                         filename = s.nextLine();
                     }
+                    setTest();
                     game();
                     break;
-                case 2:
+                case 2: // CONTINUE
                     // continue game, if it's started or start last session
                     if(filename == null && filename.trim().isEmpty()) {
                         System.out.println("Please, choose the session first.");
@@ -61,12 +63,13 @@ public class Manager {
                     }
                     game();
                     break;
-                case 3:
+                case 3: // LOAD GAME
                     // choose session
                     System.out.println("Enter name of your session:");
                     s.nextLine();
                     filename = s.nextLine();
-                    // read data from file
+
+                    // read Character data from file
                     try {
                         ois = new ObjectInputStream(new FileInputStream(filename + ".dat"));
                         player = (Character) ois.readObject();
@@ -75,25 +78,49 @@ public class Manager {
                         System.out.println("Something went wrong. Try again:(");
                         break;
                     }
+
+                    // read Map data from file
+                    try {
+                        ois = new ObjectInputStream(new FileInputStream(filename + "Map" +".dat"));
+                        gameMap = (GameMap) ois.readObject();
+                    } catch (IOException | ClassNotFoundException e) {
+                        e.printStackTrace();
+                        System.out.println("Something went wrong. Try again:(");
+                        break;
+                    }
                     game();
                     break;
-                case 4:
+                case 4: // SAVE GAME
                     // write data to file from current session
-                    saveFile = new FileOutputStream(filename + ".dat");
+
+                    // part 1. saving Character
+                    saveFilePlayer = new FileOutputStream(filename + ".dat"); // create savefile
                     try {
-                    oos = new ObjectOutputStream(saveFile);
-                    oos.writeObject(gameMap.map[player.getPosY()][player.getPosX()]);
-                    oos.close();
+                        oos = new ObjectOutputStream(saveFilePlayer);
+                        oos.writeObject(gameMap.map[player.getPosY()][player.getPosX()]); // записываем значения всех полей перса в файл
+                        oos.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        System.out.println("Something went wrong. Try again:(");
+                        break;
+                    }
+
+                    // part 2. saving GameMap
+                    saveFileMap = new FileOutputStream(filename + "Map" +".dat"); // create savefile
+                    try {
+                        oos = new ObjectOutputStream(saveFileMap);
+                        oos.writeObject(gameMap); // записываем значения всех полей перса в файл
+                        oos.close();
                     } catch (IOException e) {
                         e.printStackTrace();
                         System.out.println("Something went wrong. Try again:(");
                         break;
                     }
                     break;
-                case 5:
+                case 5: // HELP
                     // instruction to the game(keyboard, goals, tips)
                     break;
-                case 6:
+                case 6: // EXIT
                     System.out.println("""
                     Are you sure you want to exit? Unsaved experience will be deleted.
                     Exit (0)
@@ -343,7 +370,7 @@ public class Manager {
 //    "Ten Shadows Technique", 1, 20, 0, 50, 10
     public static void setTest(){
         gameMap.map[player.getPosY()][player.getPosX()] = player;
-        gameMap.map[7][2] = new PlateWithText("Congrats, you have moved!");
+        gameMap.map[4][3] = new PlateWithText("Congrats, you have moved!");
         Character fushi = new Character(2, 8, mapSizeX, mapSizeY, "Megumi Fushiguro",
                 false,
                 new Inventory(),
@@ -352,8 +379,9 @@ public class Manager {
                 new Stats(35, 80, 20, 50, 100, 100));
         fushi.addTechnique("Ten Shadows Technique", 1, 20, 0, 50, 10);
         gameMap.map[8][2] = fushi;
-        gameMap.map[9][2] = new TotemOfDexterity();
-        gameMap.map[10][2] = new PaperWall();
-        gameMap.map[11][2] = new BarbedBush();
+        gameMap.map[4][1] = new TotemOfDexterity();
+        gameMap.map[4][9] = new PaperWall();
+        gameMap.map[4][5] = new BarbedBush();
+        gameMap.map[4][7] = new ChestWithSockWithSoap();
     }
 }

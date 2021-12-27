@@ -1,4 +1,6 @@
-public class BoxWithFingerOfSukuna extends MapObject{
+import java.io.Serializable;
+
+public class BoxWithFingerOfSukuna extends MapObject implements Serializable {
     public BoxWithFingerOfSukuna(){
         super.setName("Box with finger of Sukuna");
     }

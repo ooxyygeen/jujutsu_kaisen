@@ -1,4 +1,6 @@
-public class ChestWithSockWithSoap extends MapObject{
+import java.io.Serializable;
+
+public class ChestWithSockWithSoap extends MapObject implements Serializable {
     ChestWithSockWithSoap(){
         super.setName("Chest with weapon");
     }

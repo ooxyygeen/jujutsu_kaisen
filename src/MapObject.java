@@ -1,4 +1,6 @@
-public class MapObject implements ShowInfo, Activate {
+import java.io.Serializable;
+
+public class MapObject implements ShowInfo, Activate, Serializable {
     private Coordinates coordinates;
     private String name;
     private boolean presence;

@@ -1,4 +1,6 @@
-public class TotemOfDexterity extends MapObject{
+import java.io.Serializable;
+
+public class TotemOfDexterity extends MapObject implements Serializable {
     TotemOfDexterity(){
         super.setName("Totem of dexterity");
     }
