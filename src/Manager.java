@@ -343,8 +343,8 @@ public class Manager {
 //    "Ten Shadows Technique", 1, 20, 0, 50, 10
     public static void setTest(){
         gameMap.map[player.getPosY()][player.getPosX()] = player;
-        gameMap.map[7][2] = new PlateWithText("Congrats, you have moved!");
-        Character fushi = new Character(2, 8, mapSizeX, mapSizeY, "Megumi Fushiguro",
+        gameMap.map[7][2] = new PlateWithText(7,2,true,"Congrats, you have moved!");
+        Character fushi = new Character("Megumi Fushiguro",8, 2, mapSizeY, mapSizeX,
                 false,
                 new Inventory(),
                 new Equipment(),

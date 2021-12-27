@@ -38,7 +38,7 @@ public class Stats implements Serializable {
             this.cur_stats[5] /= countOfFingersOfSukuna+1;
             return "Your consciousness has returned";
         }
-        return "You don't have any Sukuna's parts!!!";
+        return "NoSukunaPartException";
     }
     public int getStat(String aStat){
         switch (aStat) {
