@@ -11,13 +11,9 @@ public class Character<Object> extends MapObject implements Serializable {
     private String direction;
     private ArrayList <Shikigami> shikigamis;
     private final boolean availabilityOfInnerSukuna;
-    private boolean innerSukuna = false;
+    private boolean innerSukunaStatus;
     public Character() {
-        super.setPresence(true);
-//        super.setCoordinates(0,0);
-        super.setPosX(0,1);
-        super.setPosY(0,1);
-        super.setName("Chelikbaser");
+        super("Chelikbaser", 0, 0, true);
         this.availabilityOfInnerSukuna = false;
         this.inventory = new Inventory<>();
         this.equipment = new Equipment();
@@ -26,21 +22,30 @@ public class Character<Object> extends MapObject implements Serializable {
         this.stats = new Stats();
         this.direction = "down";
     }
-    public Character(int posX, int posY, int mapSizeX, int mapSizeY, String newName,
+    public Character(String newName, int newPosY, int newPosX, int mapSizeY, int mapSizeX,
                      boolean newAvOfSukuna, Inventory<Object> newInventory,
                      Equipment<Object> newEquipment, ArrayList<Technique> newTechniques,
                      Stats newStats) {
-        super.setPresence(true);
-//        super.setCoordinates(0,0);
-        super.setPosX(posX,mapSizeX);
-        super.setPosY(posY,mapSizeY);
-        super.setName(newName);
+        super(newName, newPosY, newPosX, true);
         this.availabilityOfInnerSukuna = newAvOfSukuna;
         this.inventory = newInventory;
         this.equipment = newEquipment;
         this.techniques = newTechniques;
         this.stats = newStats;
         this.direction = "down";
+    }
+    public Character(Character target){
+        super(target.getName(), target.getPosY(), target.getPosX(), target.getPresence());
+        this.availabilityOfInnerSukuna = target.availabilityOfInnerSukuna;
+        this.inventory = target.inventory;
+        this.equipment = target.equipment;
+        this.techniques = target.techniques;
+        this.stats = target.stats;
+        this.direction = target.direction;
+    }
+    @Override
+    public MapObject clone(){
+        return new Character<>(this);
     }
     public String getDirection(){
         return this.direction;
@@ -104,7 +109,18 @@ public class Character<Object> extends MapObject implements Serializable {
         return this.stats.changeMaxStat(aStat, aNum);
     }
     public String sukunaPower(){
-        return this.stats.sukunaPower(inventory.countOfObjects(FingerOfSukuna.class));
+        String message = this.stats.sukunaPower(inventory.countOfObjects(FingerOfSukuna.class));
+        if (message.contains("deal"))
+            this.innerSukunaStatus = true;
+        else
+            this.innerSukunaStatus = false;
+        return message;
+    }
+    public boolean getAvailabilityOfInnerSukuna(){
+        return this.availabilityOfInnerSukuna;
+    }
+    public boolean getInnerSukunaStatus(){
+        return this.innerSukunaStatus;
     }
     public int getFrontX() {
         if (this.direction.equals("up") || this.direction.equals("down")) {

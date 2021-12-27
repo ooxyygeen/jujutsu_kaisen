@@ -2,6 +2,16 @@ public class PaperWall extends MapObject{
     PaperWall(){
         super.setName("Paper wall");
     }
+    PaperWall(int newPosY, int newPosX, boolean newPresence){
+        super("Paper wall", newPosY, newPosX,newPresence);
+    }
+    PaperWall(PaperWall target){
+        super(target.getName(), target.getPosY(), target.getPosX(), target.getPresence());
+    }
+    @Override
+    public MapObject clone(){
+        return new PaperWall(this);
+    }
     @Override
     public String showInfo(){
         return this.getName();

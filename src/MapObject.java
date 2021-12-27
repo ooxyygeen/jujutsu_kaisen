@@ -1,12 +1,32 @@
-public class MapObject implements ShowInfo, Activate {
+import java.util.Map;
+
+public abstract class MapObject implements ShowInfo, Activate {
     private Coordinates coordinates;
     private String name;
     private boolean presence;
     private int posX, posY;
 
     public MapObject(){
-        this.presence = false;
+        this.name = "DefaultName";
+        this.posY = 0;
+        this.posX = 0;
+        this.presence = true;
     }
+    public MapObject(String newName, int newPosY, int newPosX, boolean newPresence){
+        this.name = newName;
+        this.posY = newPosY;
+        this.posX = newPosX;
+        this.presence = newPresence;
+    }
+    public MapObject(MapObject target){
+        if (target != null){
+            this.name = target.name;
+            this.posX = target.posX;
+            this.posY = target.posY;
+            this.presence = target.presence;
+        }
+    }
+    public abstract MapObject clone();
     public String setCoordinates(int newX, int newY){
         return this.coordinates.setCoordinates(newX, newY);
     }
@@ -34,10 +54,10 @@ public class MapObject implements ShowInfo, Activate {
             this.posY = mapSizeY - 1;
     }
     public int getPosX() {
-        return posX;
+        return this.posX;
     }
     public int getPosY() {
-        return posY;
+        return this.posY;
     }
     public void setName(String name) {
         this.name = name;
@@ -49,7 +69,7 @@ public class MapObject implements ShowInfo, Activate {
         return this.presence;
     }
     public String getName() {
-        return name;
+        return this.name;
     }
     @Override
     public String activate(Character character) {

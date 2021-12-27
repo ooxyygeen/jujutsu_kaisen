@@ -9,12 +9,12 @@ public class Quests {
         Arrays.fill(quests, true);
     }
     public void updateQuestsStatus(Character player){
-        if (player.getEquipment().getWeapon().getName().equals("Sock with soap")) {
+        if (player.getEquipment().getWeapon().getName().equals("Sock with soap") && quests[0]) {
             quests[0] = false;
             quests[1] = true;
             curNumberOfQuest++;
         }
-        else if (player.findItem("Finger of Sukuna")){
+        else if (player.findItem("Finger of Sukuna") && quests[1]){
             quests[1] = false;
             curNumberOfQuest++;
         }
