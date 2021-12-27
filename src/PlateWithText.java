@@ -1,4 +1,6 @@
-public class PlateWithText extends MapObject implements Activate, ShowInfo {
+import java.io.Serializable;
+
+public class PlateWithText extends MapObject implements Activate, ShowInfo{
     private String text;
     public PlateWithText (){
         super("Plate with text", 0,0, true);

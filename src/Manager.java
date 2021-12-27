@@ -5,7 +5,7 @@ import java.util.Scanner;
 public class Manager {
     static int mapSizeX = 100, mapSizeY = 100;
     static GameMap gameMap = new GameMap(mapSizeY, mapSizeX);
-    static int steps, obstacleX, obstacleY, actionChoice, directionOfMoving;
+    static int steps, obstacleX, obstacleY, actionChoice, directionOfMoving, equipmentChoice;
     static Character player = new Character();
     static String filename = "";
     static FileWriter fileSession;
@@ -22,7 +22,8 @@ public class Manager {
 
     public static void main(String[] args) throws IOException {
         Scanner s = new Scanner(System.in);
-        FileOutputStream saveFile = null;
+        FileOutputStream saveFilePlayer = null;
+        FileOutputStream saveFileMap = null;
         ObjectOutputStream oos = null;
         ObjectInputStream ois = null;
         setTest();
@@ -61,12 +62,13 @@ public class Manager {
                     }
                     game();
                     break;
-                case 3:
+                case 3: // LOAD GAME
                     // choose session
                     System.out.println("Enter name of your session:");
                     s.nextLine();
                     filename = s.nextLine();
-                    // read data from file
+
+                    // read Character data from file
                     try {
                         ois = new ObjectInputStream(new FileInputStream(filename + ".dat"));
                         player = (Character) ois.readObject();
@@ -75,15 +77,39 @@ public class Manager {
                         System.out.println("Something went wrong. Try again:(");
                         break;
                     }
+
+                    // read Map data from file
+                    try {
+                        ois = new ObjectInputStream(new FileInputStream(filename + "Map" +".dat"));
+                        gameMap = (GameMap) ois.readObject();
+                    } catch (IOException | ClassNotFoundException e) {
+                        e.printStackTrace();
+                        System.out.println("Something went wrong. Try again:(");
+                        break;
+                    }
                     game();
                     break;
-                case 4:
+                case 4: // SAVE GAME
                     // write data to file from current session
-                    saveFile = new FileOutputStream(filename + ".dat");
+
+                    // part 1. saving Character
+                    saveFilePlayer = new FileOutputStream(filename + ".dat"); // create savefile
                     try {
-                    oos = new ObjectOutputStream(saveFile);
-                    oos.writeObject(gameMap.map[player.getPosY()][player.getPosX()]);
-                    oos.close();
+                        oos = new ObjectOutputStream(saveFilePlayer);
+                        oos.writeObject(gameMap.map[player.getPosY()][player.getPosX()]); // записываем значения всех полей перса в файл
+                        oos.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        System.out.println("Something went wrong. Try again:(");
+                        break;
+                    }
+
+                    // part 2. saving GameMap
+                    saveFileMap = new FileOutputStream(filename + "Map" +".dat"); // create savefile
+                    try {
+                        oos = new ObjectOutputStream(saveFileMap);
+                        oos.writeObject(gameMap); // записываем значения всех полей перса в файл
+                        oos.close();
                     } catch (IOException e) {
                         e.printStackTrace();
                         System.out.println("Something went wrong. Try again:(");
@@ -130,7 +156,8 @@ public class Manager {
                     1. Move
                     2. Interact
                     3. Fight
-                    4. Menu
+                    4. Equip
+                    5. Menu
 
                     Enter your choice:""");
             System.out.println("What is your option?");
@@ -207,6 +234,33 @@ public class Manager {
                     }
                     break;
                 case 4 :
+                    System.out.println("What do you want to equip?");
+                    System.out.println("""
+                    1. Weapon
+                    2. Uniform
+
+                    Enter your choice:""");
+                    equipmentChoice = s.nextInt();
+                    switch (equipmentChoice){
+                        case 1 :
+                            System.out.println("Enter name of the weapon you want to equip:");
+                            s.nextLine();
+                            String nameOfWeapon = s.nextLine();
+//                            player.equipWeapon(nameOfWeapon);
+                            System.out.println(player.equipWeapon(nameOfWeapon));
+                            break;
+                        case 2 :
+                            System.out.println("Enter name of the uniform you want to equip:");
+                            s.nextLine();
+                            String nameOfUniform = s.nextLine();
+//                            player.equipUniform(nameOfUniform);
+                            System.out.println(player.equipUniform(nameOfUniform));
+                            break;
+                        default :
+                            System.out.println("Try choosing moving option again");
+                            break;
+                    }
+                case 5 :
                     return;
                 default :
                     System.out.println("Try choosing action option again");
@@ -343,8 +397,8 @@ public class Manager {
 //    "Ten Shadows Technique", 1, 20, 0, 50, 10
     public static void setTest(){
         gameMap.map[player.getPosY()][player.getPosX()] = player;
-        gameMap.map[7][2] = new PlateWithText(7,2,true,"Congrats, you have moved!");
-        Character fushi = new Character("Megumi Fushiguro",8, 2, mapSizeY, mapSizeX,
+        gameMap.map[4][3] = new PlateWithText(0,0, true,"Congrats, you have moved!");
+        Character fushi = new Character("Megumi Fushiguro", 8,2,  mapSizeY, mapSizeX,
                 false,
                 new Inventory(),
                 new Equipment(),
@@ -352,8 +406,9 @@ public class Manager {
                 new Stats(35, 80, 20, 50, 100, 100));
         fushi.addTechnique("Ten Shadows Technique", 1, 20, 0, 50, 10);
         gameMap.map[8][2] = fushi;
-        gameMap.map[9][2] = new TotemOfDexterity();
-        gameMap.map[10][2] = new PaperWall();
-        gameMap.map[11][2] = new BarbedBush();
+        gameMap.map[4][1] = new TotemOfDexterity();
+        gameMap.map[4][9] = new PaperWall();
+        gameMap.map[4][5] = new BarbedBush();
+        gameMap.map[4][7] = new ChestWithSockWithSoap();
     }
 }

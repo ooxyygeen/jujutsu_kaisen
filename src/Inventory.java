@@ -41,4 +41,12 @@ public class Inventory<Object> implements Serializable {
         }
         return false;
     }
+    public Object getItem(String nameOfItem){
+        ListIterator<Object> it = this.inventory.listIterator();
+        while (it.hasNext()) {
+            if (it.getClass().getName().equals(nameOfItem))
+                return this.inventory.remove(it.nextIndex()-1);
+        }
+        return null;
+    }
 }

@@ -1,6 +1,7 @@
+import java.io.Serializable;
 import java.util.Map;
 
-public abstract class MapObject implements ShowInfo, Activate {
+public abstract class MapObject implements ShowInfo, Activate, Serializable {
     private Coordinates coordinates;
     private String name;
     private boolean presence;
