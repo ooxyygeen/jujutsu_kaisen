@@ -12,6 +12,7 @@ public class Character<Object> extends MapObject implements Serializable {
     private ArrayList <Shikigami> shikigamis;
     private final boolean availabilityOfInnerSukuna;
     private boolean innerSukunaStatus;
+    private String DeathMessage;
     public Character() {
         super("Chelikbaser", 0, 0, true);
         this.availabilityOfInnerSukuna = false;
@@ -21,11 +22,12 @@ public class Character<Object> extends MapObject implements Serializable {
         this.techniques.add(new Technique("Fists of Van Darkholme", 10, 1, 0, 20, 10));
         this.stats = new Stats();
         this.direction = "down";
+        this.DeathMessage = "like sad, i feel like sad now ... i don't know why ..";
     }
     public Character(String newName, int newPosY, int newPosX, int mapSizeY, int mapSizeX,
                      boolean newAvOfSukuna, Inventory<Object> newInventory,
                      Equipment<Object> newEquipment, ArrayList<Technique> newTechniques,
-                     Stats newStats) {
+                     Stats newStats, String aDeathMessage) {
         super(newName, newPosY, newPosX, true);
         this.availabilityOfInnerSukuna = newAvOfSukuna;
         this.inventory = newInventory;
@@ -33,6 +35,7 @@ public class Character<Object> extends MapObject implements Serializable {
         this.techniques = newTechniques;
         this.stats = newStats;
         this.direction = "down";
+        this.DeathMessage = aDeathMessage;
     }
     public Character(Character target){
         super(target.getName(), target.getPosY(), target.getPosX(), target.getPresence());
@@ -145,5 +148,8 @@ public class Character<Object> extends MapObject implements Serializable {
         } else {
             return this.getPosY() - 1;
         }
+    }
+    public String getDeathMessage() {
+        return DeathMessage;
     }
 }

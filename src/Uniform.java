@@ -19,4 +19,7 @@ public class Uniform implements ShowInfo, Serializable {
     public int getDefense(){
         return this.defense;
     }
+    public String getName() {
+        return name;
+    }
 }
