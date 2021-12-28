@@ -24,6 +24,7 @@ public class Manager {
         Scanner s = new Scanner(System.in);
         FileOutputStream saveFilePlayer = null;
         FileOutputStream saveFileMap = null;
+        FileOutputStream saveFileQuests = null;
         ObjectOutputStream oos = null;
         ObjectInputStream ois = null;
         setTest();
@@ -77,6 +78,7 @@ public class Manager {
                         System.out.println("Something went wrong. Try again:(");
                         break;
                     }
+//                    readSaveFile(player, "", ois);
 
                     // read Map data from file
                     try {
@@ -87,34 +89,29 @@ public class Manager {
                         System.out.println("Something went wrong. Try again:(");
                         break;
                     }
+//                    readSaveFile(gameMap, "Map", ois);
+
+                    // read Quests data from file
+                    try {
+                        ois = new ObjectInputStream(new FileInputStream(filename + "Quests" +".dat"));
+                        quests = (Quests) ois.readObject();
+                    } catch (IOException | ClassNotFoundException e) {
+                        e.printStackTrace();
+                        System.out.println("Something went wrong. Try again:(");
+                        break;
+                    }
+//                    readSaveFile(quests, "Quests", ois);
+
                     game();
                     break;
                 case 4: // SAVE GAME
                     // write data to file from current session
-
-                    // part 1. saving Character
-                    saveFilePlayer = new FileOutputStream(filename + ".dat"); // create savefile
-                    try {
-                        oos = new ObjectOutputStream(saveFilePlayer);
-                        oos.writeObject(gameMap.map[player.getPosY()][player.getPosX()]); // записываем значения всех полей перса в файл
-                        oos.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        System.out.println("Something went wrong. Try again:(");
-                        break;
-                    }
-
-                    // part 2. saving GameMap
-                    saveFileMap = new FileOutputStream(filename + "Map" +".dat"); // create savefile
-                    try {
-                        oos = new ObjectOutputStream(saveFileMap);
-                        oos.writeObject(gameMap); // записываем значения всех полей перса в файл
-                        oos.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        System.out.println("Something went wrong. Try again:(");
-                        break;
-                    }
+                    // saving Character
+                    saveFile(player, "", oos, saveFilePlayer);
+                    // saving GameMap
+                    saveFile(gameMap, "Map", oos, saveFileMap);
+                    // saving Quests
+                    saveFile(quests, "Quests", oos, saveFileQuests);
                     break;
                 case 5:
                     // instruction to the game(keyboard, goals, tips)
@@ -142,6 +139,28 @@ public class Manager {
                     break;
             }
 
+        }
+    }
+
+    public static void readSaveFile (Object aObject, String aSuffix, ObjectInputStream aOis) {
+        try {
+            aOis = new ObjectInputStream(new FileInputStream(filename + aSuffix + ".dat"));
+            aObject = (aObject.getClass()); aOis.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+            System.out.println("Something went wrong. Try again:(");
+        }
+    }
+
+    public static void saveFile(Object aObject, String aSuffix, ObjectOutputStream aOos, FileOutputStream aOutputFile) throws FileNotFoundException {
+        aOutputFile = new FileOutputStream(filename + aSuffix + ".dat"); // create savefile
+        try {
+            aOos = new ObjectOutputStream(aOutputFile);
+            aOos.writeObject(aObject); // записываем значения всех полей перса в файл
+            aOos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Something went wrong. Try again:(");
         }
     }
 
@@ -320,8 +339,13 @@ public class Manager {
             System.out.println("There is " + ((MapObject)gameMap.map[player.getFrontY()][player.getFrontX()]).getName() + " in front of you");
         }
         if (player.getStat("health") < 1){
-            System.out.println("You have died, you can load your save or start the new game :-/");
+            System.out.println("You have died, you can load your save or start the new game :-/\nили заплати мне $10 tg: @ooxyygeen");
         }
+        if (player.getPosY() == 4 && player.getPosX() == 20) {
+            player.addItem(new FingerOfSukuna());
+            quests.HELP();
+        }
+
         quests.updateQuestsStatus(player);
         quests.showMainQuest();
     }
@@ -385,10 +409,12 @@ public class Manager {
         }
         if (player.getStat("health") < 1){
             System.out.println("You have died in the battle )-;");
+            System.out.println("Your last words are:\n" + player.getDeathMessage());
             return false;
         }
         else{
             System.out.println("You have won the battle, congrats! ;-)");
+            System.out.println("Your enemy last words are:\n" + enemy.getDeathMessage());
             return true;
         }
 
@@ -403,12 +429,23 @@ public class Manager {
                 new Inventory(),
                 new Equipment(),
                 new ArrayList<Technique>(),
-                new Stats(35, 80, 20, 50, 100, 100));
+                new Stats(35, 80, 20, 50, 100, 100),
+                "dynamic register...");
         fushi.addTechnique("Ten Shadows Technique", 1, 20, 0, 50, 10);
         gameMap.map[8][2] = fushi;
         gameMap.map[4][1] = new TotemOfDexterity();
         gameMap.map[4][9] = new PaperWall();
         gameMap.map[4][5] = new BarbedBush();
         gameMap.map[4][7] = new ChestWithSockWithSoap();
+        Character zhaba = new Character("Zhaba", 7,15,  mapSizeY, mapSizeX,
+                false,
+                new Inventory(),
+                new Equipment(),
+                new ArrayList<Technique>(),
+                new Stats(1, 1, 1, 1, 30, 30),
+                "You are strong. There is armor somewhere near gym (7, 17).");
+        zhaba.addTechnique("Ten Shadows Technique", 0, 0, 0, 0, 1);
+        gameMap.map[7][15] = zhaba;
+        gameMap.map[7][17] = new ChestWithUniform();
     }
 }
