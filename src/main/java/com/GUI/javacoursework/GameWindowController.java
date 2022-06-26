@@ -7,6 +7,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -65,8 +67,10 @@ public class GameWindowController {
     private static int gridSizeX = 5, gridSizeY = 5;
     private int centreX = Math.floorDiv(gridSizeX, 2), centreY = Math.floorDiv(gridSizeY, 2);
     @FXML
-    private Pane pane;
-    private GridPane gridPane;
+    private Pane mapObjectsPane;
+    private GridPane mapObjectsGridPane;
+    @FXML
+    private Pane baseMapPane;
     private Label[][] labels = new Label[gridSizeY][gridSizeX];
     @FXML
     private Label actionInfo;
@@ -154,15 +158,15 @@ public class GameWindowController {
     }
 
     private void firstInitialization() {
-        gridPane = new GridPane();
-        gridPane.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(1.0))));
+        mapObjectsGridPane = new GridPane();
+        mapObjectsGridPane.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(1.0))));
         for (int i = 0; i < gridSizeX; i++) {
-            gridPane.getColumnConstraints().add(new ColumnConstraints(150));
+            mapObjectsGridPane.getColumnConstraints().add(new ColumnConstraints(150));
             for (int j = 0; j < gridSizeY; j++) {
-                gridPane.add(labels[j][i], i, j);
+                mapObjectsGridPane.add(labels[j][i], i, j);
             }
         }
-        pane.getChildren().add(gridPane);
+        mapObjectsPane.getChildren().add(mapObjectsGridPane);
     }
 
     private void update() {
@@ -187,11 +191,13 @@ public class GameWindowController {
                     continue;
                 if (displayedY < 0 || displayedY >= mapSizeY ||
                         displayedX < 0 || displayedX >= mapSizeX) {
+                    labels[i][j].setOpacity(1);
                     labels[i][j].setText("Out of map");
-                } else if (gameMap.map[displayedY][displayedX] != null)
+                } else if (gameMap.map[displayedY][displayedX] != null) {
+                    labels[i][j].setOpacity(1);
                     labels[i][j].setText(((MapObject) gameMap.map[displayedY][displayedX]).showInfo());
-                else
-                    labels[i][j].setText(" ");
+                } else
+                    labels[i][j].setOpacity(0);
             }
         }
         playerPosX_label.setText("" + player.getPosX());
@@ -271,16 +277,17 @@ public class GameWindowController {
             for (int j = 0; j < gridSizeX; j++) {
                 labels[i][j] = new Label();
 //                labels[i][j].minHeight(150);
-                labels[i][j].setMinSize(100, 100);
                 labels[i][j].setFont(new Font("Arial", 32));
             }
 
         }
         firstInitialization();
+        baseMapPane.getChildren().add(new ImageView(new Image("file:src/main/java/com/GUI/javacoursework/textures/tileable_grass.png")));
+        baseMapPane.setVisible(true);
         update();
         startButton.setVisible(false);
     }
-    //    {
+//    {
 //        try {
 //            fileSession = new FileWriter("lastSession.txt", false);
 //        } catch (IOException e) {
