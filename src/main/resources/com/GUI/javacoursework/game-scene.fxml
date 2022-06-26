@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.TextFlow?>
+
+<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="720.0" minWidth="1280.0"
+            onKeyPressed="#keyListener" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.GUI.javacoursework.GameWindowController">
+   <children>
+      <Pane fx:id="pane" layoutX="-1.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+            minHeight="720.0" minWidth="1280.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+            AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
+      <Label fx:id="actionInfo" prefHeight="18.0" prefWidth="672.0" textAlignment="CENTER">
+         <font>
+            <Font size="14.0"/>
+         </font>
+      </Label>
+      <VBox fillWidth="false" layoutX="51.0" layoutY="41.0" maxHeight="250.0" maxWidth="250.0" minHeight="150.0"
+            minWidth="150.0">
+         <children>
+            <TextFlow fx:id="questText" prefHeight="200.0" prefWidth="200.0"/>
+         </children>
+      </VBox>
+      <VBox fillWidth="false" layoutX="1039.0" layoutY="113.0" prefHeight="200.0" prefWidth="100.0">
+         <children>
+            <Label maxWidth="1.7976931348623157E308" text="HP" textAlignment="CENTER"/>
+            <ProgressBar fx:id="hpBar" minHeight="20.0" prefWidth="200.0" progress="0.0"/>
+            <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+               <children>
+                  <Label text="player Y"/>
+                  <Label text="player X" textAlignment="RIGHT"/>
+               </children>
+            </HBox>
+            <HBox prefHeight="100.0" prefWidth="200.0" spacing="70.0">
+               <children>
+                  <Label fx:id="playerPosY_label"/>
+                  <Label fx:id="playerPosX_label" textAlignment="RIGHT"/>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+      <Button fx:id="startButton" layoutX="574.0" layoutY="314.0" mnemonicParsing="false" onAction="#startButton"
+              prefHeight="91.0" prefWidth="131.0" text="START">
+         <font>
+            <Font size="23.0"/>
+         </font>
+      </Button>
+   </children>
+</AnchorPane>

@@ -91,6 +91,6 @@ public abstract class MapObject implements ShowInfo, Activate, Serializable {
 
     @Override
     public String showInfo() {
-        return null;
+        return name;
     }
 }

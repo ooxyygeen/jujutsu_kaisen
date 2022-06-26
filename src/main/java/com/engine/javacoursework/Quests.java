@@ -35,10 +35,10 @@ public class Quests implements Serializable {
         }
     }
 
-    public void showMainQuest() {
+    public String showMainQuest() {
         switch (this.curNumberOfMainQuest) {
             case 0:
-                System.out.println("""
+                return """
                         Your quest is:
                         Try to interact with some objects:
                         Totem of dexterity (4,1);
@@ -46,27 +46,23 @@ public class Quests implements Serializable {
                         Barbed bush (4,5);
                         Chest (4,7).
                         The coordinates are given (y,x).
-                        """);
-                break;
+                        """;
             case 1:
-                System.out.println("""
+                return """
                         Your quest is:
                         Your school friends asked you to check strange box (4, 20) in the school garden,
                         they said it may contain useful for the 'suspicious club' item.
                         The coordinates of the box are given (y,x).
-                        """);
-                break;
+                        """;
             case 2:
-                System.out.println("""
+                return """
                         Your quest is:
                         You need to go to the hospital (7, 15) and see your grandfather. Looks easy, 
                         nothing can go wrong, right? ;)
                         The coordinates are given (y,x).
-                        """);
-                break;
+                        """;
             default:
-                System.out.println("You have no quests left");
-                break;
+                return "You have no quests left";
         }
     }
 }

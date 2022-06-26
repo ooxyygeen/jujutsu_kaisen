@@ -1,7 +1,7 @@
 package com.engine.javacoursework;
 
 public class TotemOfDexterity extends MapObject {
-    TotemOfDexterity() {
+    public TotemOfDexterity() {
         super("Totem of dexterity", 0, 0, true);
     }
 

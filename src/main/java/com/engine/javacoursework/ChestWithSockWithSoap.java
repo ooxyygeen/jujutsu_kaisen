@@ -3,7 +3,7 @@ package com.engine.javacoursework;
 import java.util.Map;
 
 public class ChestWithSockWithSoap extends MapObject {
-    ChestWithSockWithSoap() {
+    public ChestWithSockWithSoap() {
         super("Chest with weapon", 0, 0, true);
     }
 
@@ -28,7 +28,7 @@ public class ChestWithSockWithSoap extends MapObject {
     @Override
     public String activate(Character character) {
         if (character != null) {
-            character.addItem(new Uniform("Kuntush", 3));
+//            character.addItem(new Uniform("Kuntush", 3));
 //            return character.getEquipment().equip("weapon", new Weapon("Sock with soap", 3));
             return character.addItem(new Weapon("Sock with soap", 3));
 //                    .equip("weapon", new Weapon("Sock with soap", 3));
