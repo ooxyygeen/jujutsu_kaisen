@@ -84,6 +84,8 @@ public class GameWindowController {
     Button startButton;
     @FXML
     TextFlow questText;
+    @FXML
+    VBox playerDataVBox;
 
     //    {
 //        gridPane = new GridPane();
@@ -159,14 +161,29 @@ public class GameWindowController {
 
     private void firstInitialization() {
         mapObjectsGridPane = new GridPane();
-        mapObjectsGridPane.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(1.0))));
+//        mapObjectsGridPane.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(1.0))));
         for (int i = 0; i < gridSizeX; i++) {
-            mapObjectsGridPane.getColumnConstraints().add(new ColumnConstraints(150));
+//            mapObjectsGridPane.getColumnConstraints().add(new ColumnConstraints(150));
+//            mapObjectsGridPane.setStyle("-fx-min-height: 20%;" +
+//                    "-fx-min-width: 20%");
             for (int j = 0; j < gridSizeY; j++) {
                 mapObjectsGridPane.add(labels[j][i], i, j);
             }
         }
         mapObjectsPane.getChildren().add(mapObjectsGridPane);
+        mapObjectsPane.setStyle("-fx-min-height: 100%;" +
+                "-fx-min-width: 100%");
+        baseMapPane.setVisible(false);
+        mapObjectsPane.setVisible(true);
+        actionInfo.setVisible(true);
+        questText.setVisible(true);
+        playerDataVBox.setVisible(true);
+        startButton.setVisible(false);
+        mapObjectsGridPane.setMinHeight(mapObjectsPane.getHeight());
+        mapObjectsGridPane.setMinWidth(mapObjectsPane.getWidth());
+        playerPosX_label.setStyle("-fx-text-fill: white");
+        playerPosY_label.setStyle("-fx-text-fill: white");
+        questText.setStyle("-fx-text-fill: white");
     }
 
     private void update() {
@@ -197,7 +214,7 @@ public class GameWindowController {
                     labels[i][j].setOpacity(1);
                     labels[i][j].setText(((MapObject) gameMap.map[displayedY][displayedX]).showInfo());
                 } else
-                    labels[i][j].setOpacity(0);
+                    labels[i][j].setText("");
             }
         }
         playerPosX_label.setText("" + player.getPosX());
@@ -273,19 +290,25 @@ public class GameWindowController {
 
     public void startButton(ActionEvent event) {
         setTest();
+        mapObjectsPane.setBackground(new Background(new BackgroundImage(
+                new Image("file:src/main/java/com/GUI/javacoursework/textures/tileable_grass.png"),
+                BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
+                new BackgroundSize(100, 100, true, true, true, true))));
         for (int i = 0; i < gridSizeY; i++) {
             for (int j = 0; j < gridSizeX; j++) {
-                labels[i][j] = new Label();
-//                labels[i][j].minHeight(150);
+                labels[i][j] = new Label("");
+                labels[i][j].setStyle("-fx-border-color: black; " +
+                        "-fx-border-width: 1;" +
+                        "-fx-cell-size: 100%;" +
+                        "-fx-text-fill: white");
                 labels[i][j].setFont(new Font("Arial", 32));
+                labels[i][j].setMinHeight(mapObjectsPane.getHeight() / gridSizeY);
+                labels[i][j].setMinWidth(mapObjectsPane.getWidth() / gridSizeX);
             }
-
         }
         firstInitialization();
-        baseMapPane.getChildren().add(new ImageView(new Image("file:src/main/java/com/GUI/javacoursework/textures/tileable_grass.png")));
-        baseMapPane.setVisible(true);
+//        baseMapPane.getChildren().add(new ImageView();
         update();
-        startButton.setVisible(false);
     }
 //    {
 //        try {
