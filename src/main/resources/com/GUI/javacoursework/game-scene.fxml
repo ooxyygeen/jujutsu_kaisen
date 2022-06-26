@@ -30,7 +30,8 @@
             <TextFlow fx:id="questText" prefHeight="200.0" prefWidth="200.0"/>
          </children>
       </VBox>
-      <VBox fillWidth="false" layoutX="1039.0" layoutY="113.0" prefHeight="200.0" prefWidth="100.0">
+      <VBox fx:id="playerDataVBox" fillWidth="false" layoutX="1039.0" layoutY="113.0" prefHeight="200.0"
+            prefWidth="100.0">
          <children>
             <Label maxWidth="1.7976931348623157E308" text="HP" textAlignment="CENTER"/>
             <ProgressBar fx:id="hpBar" minHeight="20.0" prefWidth="200.0" progress="0.0"/>
