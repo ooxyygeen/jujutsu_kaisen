@@ -65,6 +65,25 @@ public class Stats implements Serializable {
         }
     }
 
+    public int getMaxStat(String aStat) {
+        switch (aStat) {
+            case "strength":
+                return this.max_stats[0];
+            case "intelligence":
+                return this.max_stats[1];
+            case "luck":
+                return this.max_stats[2];
+            case "agility":
+                return this.max_stats[3];
+            case "health":
+                return this.max_stats[4];
+            case "energy":
+                return this.max_stats[5];
+            default:
+                return -1;
+        }
+    }
+
     public int[] getAllStats() {
         return cur_stats;
     }

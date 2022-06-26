@@ -128,6 +128,10 @@ public class Character<Object extends ShowInfo> extends MapObject implements Ser
         return this.stats.getStat(aStat);
     }
 
+    public int getMaxStat(String aStat) {
+        return this.stats.getMaxStat(aStat);
+    }
+
     public int[] getAllStats() {
         return this.stats.getAllStats();
     }

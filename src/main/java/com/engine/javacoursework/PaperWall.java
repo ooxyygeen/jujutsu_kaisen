@@ -3,7 +3,7 @@ package com.engine.javacoursework;
 import java.io.Serializable;
 
 public class PaperWall extends MapObject {
-    PaperWall() {
+    public PaperWall() {
         super.setName("Paper wall");
     }
 

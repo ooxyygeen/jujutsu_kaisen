@@ -1,8 +1,8 @@
 package com.engine.javacoursework;
 
 public class ChestWithUniform extends MapObject {
-    ChestWithUniform() {
-        super("Chest with weapon", 0, 0, true);
+    public ChestWithUniform() {
+        super("Chest with uniform", 0, 0, true);
     }
 
     ChestWithUniform(int newPosY, int newPosX, boolean newPresence) {

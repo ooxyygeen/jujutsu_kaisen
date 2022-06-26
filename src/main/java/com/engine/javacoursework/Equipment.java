@@ -6,7 +6,7 @@ public class Equipment<Object extends ShowInfo> implements Serializable {
     private Weapon weapon;
     private Uniform uniform;
 
-    Equipment() {
+    public Equipment() {
         this.weapon = new Weapon();
         this.uniform = new Uniform();
     }
