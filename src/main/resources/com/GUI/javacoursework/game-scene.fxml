@@ -14,7 +14,9 @@
             onKeyPressed="#keyListener" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.GUI.javacoursework.GameWindowController">
    <children>
-      <Pane fx:id="pane" layoutX="-1.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+      <Pane fx:id="baseMapPane" minHeight="720.0" minWidth="1280.0"
+            style="-fx-background-image: url('../../textures/tileable_grass.png');"/>
+      <Pane fx:id="mapObjectsPane" layoutX="-1.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
             minHeight="720.0" minWidth="1280.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
             AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
       <Label fx:id="actionInfo" prefHeight="18.0" prefWidth="672.0" textAlignment="CENTER">
