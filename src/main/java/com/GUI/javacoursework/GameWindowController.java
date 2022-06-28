@@ -30,6 +30,8 @@ public class GameWindowController {
     private ObjectOutputStream oos = null;
     private ObjectInputStream ois = null;
 
+
+
     public void setTest() {
 //        System.out.println("x: " + player.getPosX() + " y: " + player.getPosY());
         gameMap.map[player.getPosY()][player.getPosX()] = player;
