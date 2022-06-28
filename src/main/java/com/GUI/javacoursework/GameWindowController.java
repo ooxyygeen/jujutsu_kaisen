@@ -8,6 +8,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.TextFlow;
@@ -148,7 +150,7 @@ public class GameWindowController {
     @FXML
     private Pane mapObjectsPane, invPane, gameOverPane, gameMenuPane;
     GridPane mapObjectsGridPane;
-    private Label[][] labels = new Label[gridSizeY][gridSizeX];
+    private ImageView[][] objects = new ImageView[gridSizeY][gridSizeX];
     @FXML
     private ProgressBar hpBar;
     @FXML
@@ -228,7 +230,9 @@ public class GameWindowController {
         questText.resize(questVBox.getWidth(), questVBox.getHeight());
         for (int i = 0; i < gridSizeX; i++) {
             for (int j = 0; j < gridSizeY; j++) {
-                StackPane stackPanes = new StackPane(labels[j][i]);
+                objects[i][j].setFitWidth(mapObjectsPane.getWidth() / gridSizeX);
+                objects[i][j].setFitHeight(mapObjectsPane.getHeight() / gridSizeY);
+                StackPane stackPanes = new StackPane(objects[j][i]);
                 stackPanes.setId("cell");
                 stackPanes.setMinSize(mapObjectsPane.getWidth() / gridSizeX, mapObjectsPane.getHeight() / gridSizeY);
                 stackPanes.setMaxSize(mapObjectsPane.getWidth() / gridSizeX, mapObjectsPane.getHeight() / gridSizeY);
@@ -248,6 +252,59 @@ public class GameWindowController {
         gameOverPane.setVisible(true);
     }
 
+    private void setImage(int i, int j, String objectName) {
+        switch (objectName) {
+            case "Barbed bush":
+                objects[i][j].setImage(new Image(HelloApplication.class.getResource("/textures/bush.png").toExternalForm()));
+                break;
+            case "Chest with weapon":
+                objects[i][j].setImage(new Image(HelloApplication.class.getResource("/textures/chest.png").toExternalForm()));
+                break;
+            case "Chest with uniform":
+                objects[i][j].setImage(new Image(HelloApplication.class.getResource("/textures/chest2.png").toExternalForm()));
+                break;
+            case "Paper wall":
+                objects[i][j].setImage(new Image(HelloApplication.class.getResource("/textures/paper.png").toExternalForm()));
+                break;
+            case "Plate with text":
+                objects[i][j].setImage(new Image(HelloApplication.class.getResource("/textures/signWithText.png").toExternalForm()));
+                break;
+            case "Totem of dexterity":
+                objects[i][j].setImage(new Image(HelloApplication.class.getResource("/textures/totem.png").toExternalForm()));
+                break;
+            case "Chelikbaser":
+                objects[i][j].setImage(new Image(HelloApplication.class.getResource("/textures/mainCharacter.png").toExternalForm()));
+                switch (player.getDirection()) {
+                    case "up":
+                        objects[i][j].setRotate(0);
+                        break;
+                    case "down":
+                        objects[i][j].setRotate(180);
+                        break;
+                    case "right":
+                        objects[i][j].setRotate(90);
+                        break;
+                    default:
+                        objects[i][j].setRotate(270);
+                        break;
+                }
+                break;
+            case "Megumi Fushiguro":
+                objects[i][j].setImage(new Image(HelloApplication.class.getResource("/textures/fushi.png").toExternalForm()));
+                break;
+            case "Zhaba":
+                objects[i][j].setImage(new Image(HelloApplication.class.getResource("/textures/frog.png").toExternalForm()));
+                break;
+            case "out":
+                objects[i][j].setImage(new Image(HelloApplication.class.getResource("/textures/rock.png").toExternalForm()));
+                break;
+            default:
+                objects[i][j].setImage(new Image(HelloApplication.class.getResource("/textures/empty.png").toExternalForm()));
+                break;
+        }
+
+    }
+
     private void update() {
         if (player.getPosY() == 4 && player.getPosX() == 20) {
             player.addItem(new FingerOfSukuna());
@@ -261,7 +318,7 @@ public class GameWindowController {
         label.setText(quests.showMainQuest());
         questText.getChildren().add(label);
 
-        labels[centreY][centreX].setText("YOU");
+        setImage(centreY, centreX, player.getName());
         int playerX = player.getPosX(), playerY = player.getPosY(), displayedX, displayedY;
         for (int i = 0; i < gridSizeY; i++) {
             for (int j = 0; j < gridSizeX; j++) {
@@ -271,13 +328,13 @@ public class GameWindowController {
                     continue;
                 if (displayedY < 0 || displayedY >= mapSizeY ||
                         displayedX < 0 || displayedX >= mapSizeX) {
-                    labels[i][j].setOpacity(1);
-                    labels[i][j].setText("Out of map");
+                    setImage(i, j, "out");
+                    objects[i][j].setVisible(true);
                 } else if (gameMap.map[displayedY][displayedX] != null) {
-                    labels[i][j].setOpacity(1);
-                    labels[i][j].setText(((MapObject) gameMap.map[displayedY][displayedX]).showInfo());
+                    setImage(i, j, ((ShowInfo) gameMap.map[displayedY][displayedX]).showInfo());
+                    objects[i][j].setVisible(true);
                 } else
-                    labels[i][j].setText("");
+                    objects[i][j].setVisible(false);
             }
         }
         playerPosX_label.setText("" + player.getPosX());
@@ -354,13 +411,13 @@ public class GameWindowController {
 
     private boolean isControlLocked = true;
     private boolean isStarted = false;
+
     @FXML
     private void startButton(ActionEvent event) {
         setTest();
         for (int i = 0; i < gridSizeY; i++) {
             for (int j = 0; j < gridSizeX; j++) {
-                labels[i][j] = new Label("");
-                labels[i][j].setWrapText(true);
+                objects[i][j] = new ImageView();
             }
         }
         firstInitialization();
@@ -429,6 +486,9 @@ public class GameWindowController {
         }
     }
 
+    public void exitButton() {
+
+    }
 
     @FXML
     public void keyListener(KeyEvent event) {

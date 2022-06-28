@@ -1,0 +1,11 @@
+/*@import url('https://fonts.googleapis.com/css2?family=Cuprum:wght@700&display=swap');*/
+
+.label {
+    -fx-font-family: sans-serif;
+    -fx-font-size: 34px;
+    -fx-text-align: center;
+    -fx-text-fill: white;
+    -fx-border-color: black;
+    -fx-border-width: 1;
+    /*-webkit-text-stroke: 1px skyblue;*/
+}

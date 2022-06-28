@@ -74,3 +74,8 @@
     -fx-font-size: 72px;
     -fx-stroke: yellow;
 }
+
+Image {
+    -fx-fit-to-width: true;
+    -fx-fit-to-height: true;
+}
