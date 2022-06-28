@@ -38,15 +38,10 @@ public class Quests implements Serializable {
     public String showMainQuest() {
         switch (this.curNumberOfMainQuest) {
             case 0:
-                return """
-                        Your quest is:
-                        Try to interact with some objects:
-                        Totem of dexterity (4,1);
-                        Plate with text (4,3);
-                        Barbed bush (4,5);
-                        Chest (4,7).
-                        The coordinates are given (y,x).
-                        """;
+                return "Your quest is:\nTry to interact with some objects:" +
+                        "\nTotem of dexterity (4,1);\nPlate with text (4,3);" +
+                        "\nBarbed bush (4,5);\nChest (4,7)." +
+                        "\nThe coordinates are given (y,x).";
             case 1:
                 return """
                         Your quest is:

@@ -2,7 +2,6 @@ package com.engine.javacoursework;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class Character<Object extends ShowInfo> extends MapObject implements Serializable {
     private Inventory<Object> inventory;
@@ -42,7 +41,7 @@ public class Character<Object extends ShowInfo> extends MapObject implements Ser
         this.DeathMessage = aDeathMessage;
     }
 
-    public Character(Character target) {
+    public Character(Character<Object> target) {
         super(target.getName(), target.getPosY(), target.getPosX(), target.getPresence());
         this.availabilityOfInnerSukuna = target.availabilityOfInnerSukuna;
         this.inventory = target.inventory;
@@ -81,6 +80,26 @@ public class Character<Object extends ShowInfo> extends MapObject implements Ser
         return this.inventory.findElement(item);
     }
 
+    public boolean equipItem(Object item) {
+        if (item != null) {
+            if (item.getClass() == Uniform.class) {
+                this.inventory.addElement((Object) this.equipment.getUniform());
+                this.equipment.equip("uniform", item);
+                return true;
+            } else if (item.getClass() == Weapon.class) {
+                this.inventory.addElement((Object) this.equipment.getWeapon());
+                this.equipment.equip("weapon", item);
+                return true;
+            } else
+                return false;
+        }
+        return false;
+    }
+
+    public Object getItem(String nameOfItem) {
+        return this.inventory.getItem(nameOfItem);
+    }
+
     public String move(String aDirection, int aStepsNum, int mapSizeX, int mapSizeY) {
         this.direction = aDirection;
         switch (aDirection) {
@@ -114,6 +133,10 @@ public class Character<Object extends ShowInfo> extends MapObject implements Ser
 
     public Equipment getEquipment() {
         return this.equipment;
+    }
+
+    public ArrayList<Object> getIventory() {
+        return this.inventory.getInventory();
     }
 
     public String equipWeapon(String nameOfWeapon) {

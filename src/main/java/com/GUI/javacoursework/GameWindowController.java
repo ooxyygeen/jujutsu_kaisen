@@ -4,19 +4,14 @@ import com.engine.javacoursework.*;
 import com.engine.javacoursework.Character;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.scene.text.TextFlow;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Scanner;
 
 public class GameWindowController {
@@ -36,7 +31,7 @@ public class GameWindowController {
     private ObjectInputStream ois = null;
 
     public void setTest() {
-        System.out.println("x: " + player.getPosX() + " y: " + player.getPosY());
+//        System.out.println("x: " + player.getPosX() + " y: " + player.getPosY());
         gameMap.map[player.getPosY()][player.getPosX()] = player;
         gameMap.map[4][3] = new PlateWithText(4, 3, true, "Congrats, you have moved!");
         Character fushi = new Character("Megumi Fushiguro", 8, 2, mapSizeY, mapSizeX,
@@ -64,62 +59,46 @@ public class GameWindowController {
         gameMap.map[7][17] = new ChestWithUniform();
     }
 
-    private static int gridSizeX = 5, gridSizeY = 5;
+    private static int gridSizeX = 9, gridSizeY = 9;
     private int centreX = Math.floorDiv(gridSizeX, 2), centreY = Math.floorDiv(gridSizeY, 2);
     @FXML
-    private Pane mapObjectsPane;
-    private GridPane mapObjectsGridPane;
-    @FXML
-    private Pane baseMapPane;
+    private Pane mapObjectsPane, invPane;
+    GridPane mapObjectsGridPane;
     private Label[][] labels = new Label[gridSizeY][gridSizeX];
-    @FXML
-    private Label actionInfo;
     @FXML
     private ProgressBar hpBar;
     @FXML
-    private Label playerPosX_label;
+    private Label playerPosX_label, playerPosY_label, actionInfo, hpLabel, weaponLabel, uniformLabel;
     @FXML
-    private Label playerPosY_label;
+    private Button startButton;
     @FXML
-    Button startButton;
+    private TextFlow questText;
     @FXML
-    TextFlow questText;
+    private VBox playerDataVBox, questVBox;
     @FXML
-    VBox playerDataVBox;
-
-    //    {
-//        gridPane = new GridPane();
-//        playerPosX_label = new Label();
-//        playerPosY_label = new Label();
-//        hpBar = new ProgressBar();
-//        actionInfo = new Label();
-//        setTest();
-//        for (int i = 0; i < gridSizeY; i++) {
-//            for (int j = 0; j < gridSizeX; j++) {
-//                labels[i][j] = new Label();
-//                labels[i][j].minHeight(150);
-//                labels[i][j].setFont(new Font("Arial", 14));
-//            }
-//        }
-//        firstInitialization();
-//
-//        update();
-//    }
-    private void outputInfo(ShowInfo aObject) {
-        aObject.showInfo();
-    }
+    private FlowPane invItemsPane;
+    @FXML
+    private AnchorPane scenePane;
 
     private void swap(MapObject first, int Y, int X) {
         gameMap.map[Y][X] = first;
         gameMap.map[first.getPosY()][first.getPosX()] = null;
     }
 
+    private void resizeEvent() {
+//
+//        playerDataVBox.resize(mapObjectsPane.getWidth() / 7, mapObjectsPane.getHeight() / 4);
+//        playerDataVBox.setLayoutX(playerDataVBox.getScene().getWidth() - playerDataVBox.getWidth() * (1 + 0.2));
+//        playerDataVBox.setLayoutY(playerDataVBox.getHeight() * (1 + 0.2));
+//        questVBox.resize(mapObjectsPane.getWidth() / 7, mapObjectsPane.getHeight() / 3);
+//        questVBox.setLayoutX(questVBox.getWidth() * (1 + 0.2));
+//        questVBox.setLayoutY(questVBox.getHeight() * (1 + 0.2));
+    }
+
     private boolean isObstaclePresent(String direction, int steps, Character player) {
         if (direction.equals("up")) {
             for (int i = player.getPosY() - 1; i >= player.getPosY() - steps; i--) {
                 if (i < 0 || gameMap.map[i][player.getPosX()] != null && ((MapObject) gameMap.map[i][player.getPosX()]).getPresence()) {
-                    if (i < 0)
-                        System.out.println("trying to get out of map");
                     obstacleY = i;
                     obstacleX = player.getPosX();
                     return true;
@@ -128,8 +107,6 @@ public class GameWindowController {
         } else if (direction.equals("down")) {
             for (int i = player.getPosY() + 1; i <= player.getPosY() + steps; i++) {
                 if (i >= mapSizeY || gameMap.map[i][player.getPosX()] != null && ((MapObject) gameMap.map[i][player.getPosX()]).getPresence()) {
-                    if (i >= mapSizeY)
-                        System.out.println("trying to get out of map");
                     obstacleY = i;
                     obstacleX = player.getPosX();
                     return true;
@@ -138,8 +115,6 @@ public class GameWindowController {
         } else if (direction.equals("right")) {
             for (int i = player.getPosX() + 1; i <= player.getPosX() + steps; i++) {
                 if (i >= mapSizeX || gameMap.map[player.getPosY()][i] != null && ((MapObject) gameMap.map[player.getPosY()][i]).getPresence()) {
-                    if (i >= mapSizeX)
-                        System.out.println("trying to get out of map");
                     obstacleX = i;
                     obstacleY = player.getPosY();
                     return true;
@@ -148,8 +123,6 @@ public class GameWindowController {
         } else if (direction.equals("left")) {
             for (int i = player.getPosX() - 1; i >= player.getPosX() - steps; i--) {
                 if (i < 0 || gameMap.map[player.getPosY()][i] != null && ((MapObject) gameMap.map[player.getPosY()][i]).getPresence()) {
-                    if (i < 0)
-                        System.out.println("trying to get out of map");
                     obstacleX = i;
                     obstacleY = player.getPosY();
                     return true;
@@ -159,36 +132,35 @@ public class GameWindowController {
         return false;
     }
 
-    private void firstInitialization() {
+    public void firstInitialization() {
+        mapObjectsPane.setMinSize(mapObjectsPane.getScene().getHeight(), mapObjectsPane.getScene().getHeight());
+        mapObjectsPane.setMaxSize(mapObjectsPane.getScene().getHeight(), mapObjectsPane.getScene().getHeight());
+        mapObjectsPane.resize(mapObjectsPane.getMaxWidth(), mapObjectsPane.getMaxHeight());
+        mapObjectsPane.setLayoutX((scenePane.getScene().getWidth() - scenePane.getScene().getHeight()) / 2);
+        mapObjectsPane.setLayoutY(0);
         mapObjectsGridPane = new GridPane();
-//        mapObjectsGridPane.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(1.0))));
+        mapObjectsGridPane.setId("mapObjectsGridPane");
+        questText.setMaxSize(questVBox.getWidth(), questVBox.getHeight());
+        questText.resize(questVBox.getWidth(), questVBox.getHeight());
         for (int i = 0; i < gridSizeX; i++) {
-//            mapObjectsGridPane.getColumnConstraints().add(new ColumnConstraints(150));
-//            mapObjectsGridPane.setStyle("-fx-min-height: 20%;" +
-//                    "-fx-min-width: 20%");
             for (int j = 0; j < gridSizeY; j++) {
-                mapObjectsGridPane.add(labels[j][i], i, j);
+                StackPane stackPanes = new StackPane(labels[j][i]);
+                stackPanes.setId("cell");
+                stackPanes.setMinSize(mapObjectsPane.getWidth() / gridSizeX, mapObjectsPane.getHeight() / gridSizeY);
+                stackPanes.setMaxSize(mapObjectsPane.getWidth() / gridSizeX, mapObjectsPane.getHeight() / gridSizeY);
+                mapObjectsGridPane.add(stackPanes, i, j);
             }
         }
         mapObjectsPane.getChildren().add(mapObjectsGridPane);
-        mapObjectsPane.setStyle("-fx-min-height: 100%;" +
-                "-fx-min-width: 100%");
-        baseMapPane.setVisible(false);
         mapObjectsPane.setVisible(true);
         actionInfo.setVisible(true);
         questText.setVisible(true);
         playerDataVBox.setVisible(true);
         startButton.setVisible(false);
-        mapObjectsGridPane.setMinHeight(mapObjectsPane.getHeight());
-        mapObjectsGridPane.setMinWidth(mapObjectsPane.getWidth());
-        playerPosX_label.setStyle("-fx-text-fill: white");
-        playerPosY_label.setStyle("-fx-text-fill: white");
-        questText.setStyle("-fx-text-fill: white");
     }
 
     private void update() {
         if (player.getStat("health") < 1) {
-//            System.out.println("You have died, you can load your save or start the new game :-/\nили заплати мне $10 tg: @ooxyygeen");
         }
         if (player.getPosY() == 4 && player.getPosX() == 20) {
             player.addItem(new FingerOfSukuna());
@@ -196,7 +168,11 @@ public class GameWindowController {
         }
         quests.updateQuestsStatus(player);
         questText.getChildren().clear();
-        questText.getChildren().add(new Label(quests.showMainQuest()));
+        Label label = new Label();
+        label.setMaxSize(questText.getWidth(), questText.getHeight());
+        label.setWrapText(true);
+        label.setText(quests.showMainQuest());
+        questText.getChildren().add(label);
 
         labels[centreY][centreX].setText("YOU");
         int playerX = player.getPosX(), playerY = player.getPosY(), displayedX, displayedY;
@@ -219,6 +195,9 @@ public class GameWindowController {
         }
         playerPosX_label.setText("" + player.getPosX());
         playerPosY_label.setText("" + player.getPosY());
+        uniformLabel.setText(player.getEquipment().getUniform().getName());
+        weaponLabel.setText(player.getEquipment().getWeapon().getName());
+        hpLabel.setText("" + player.getStat("health") + "/" + player.getMaxStat("health"));
         hpBar.setProgress(((double) player.getStat("health")) / player.getMaxStat("health"));
     }
 
@@ -246,7 +225,7 @@ public class GameWindowController {
     private boolean fight(Character player, Character enemy) {
         int i = 1;
         while (player.getStat("health") > 0 && enemy.getStat("health") > 0) {
-            System.out.println(i + ". Your health: " + player.getStat("health") + "\n"
+            actionInfo.setText(i + ". Your health: " + player.getStat("health") + "\n"
                     + "   Enemy's health: " + enemy.getStat("health"));
             if (enemy.getStat("energy") >= enemy.getTechnique(0).getStat("cost")) {
                 player.changeCurStat("health",
@@ -275,6 +254,11 @@ public class GameWindowController {
                                 * (1 - enemy.getEquipment().getUniform().getDefense() / 50));
             }
             i++;
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
         if (player.getStat("health") < 1) {
             System.out.println("You have died in the battle )-;");
@@ -290,40 +274,49 @@ public class GameWindowController {
 
     public void startButton(ActionEvent event) {
         setTest();
-        mapObjectsPane.setBackground(new Background(new BackgroundImage(
-                new Image("file:src/main/java/com/GUI/javacoursework/textures/tileable_grass.png"),
-                BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
-                new BackgroundSize(100, 100, true, true, true, true))));
         for (int i = 0; i < gridSizeY; i++) {
             for (int j = 0; j < gridSizeX; j++) {
                 labels[i][j] = new Label("");
-                labels[i][j].setStyle("-fx-border-color: black; " +
-                        "-fx-border-width: 1;" +
-                        "-fx-cell-size: 100%;" +
-                        "-fx-text-fill: white");
-                labels[i][j].setFont(new Font("Arial", 32));
-                labels[i][j].setMinHeight(mapObjectsPane.getHeight() / gridSizeY);
-                labels[i][j].setMinWidth(mapObjectsPane.getWidth() / gridSizeX);
+                labels[i][j].setWrapText(true);
+//                labels[i][j].setMinHeight(mapObjectsPane.getHeight() / gridSizeY);
+//                labels[i][j].setMinWidth(mapObjectsPane.getWidth() / gridSizeX);
             }
         }
         firstInitialization();
-//        baseMapPane.getChildren().add(new ImageView();
         update();
     }
-//    {
-//        try {
-//            fileSession = new FileWriter("lastSession.txt", false);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            System.out.println("Something went wrong...");
-//            System.exit(2);
-//        }
-//    }
+
+    private boolean inv_win_is_toggled = false;
+
+    public void toggleInventoryWindow() {
+        if (inv_win_is_toggled) {
+            Iterator it = player.getIventory().iterator();
+            for (int i = 0; i < player.getIventory().size(); i++) {
+                String itemName = ((ShowInfo) player.getIventory().get(i)).showInfo();
+                Button temp = new Button(itemName);
+                temp.setOnAction(event -> {
+                            ShowInfo item = (ShowInfo) player.getItem((((Button) event.getSource()).getText()));
+                            System.out.println("trying to equip " + item.showInfo());
+                            if (player.equipItem(item)) {
+                                invItemsPane.getChildren().clear();
+                                toggleInventoryWindow();
+                            }
+                        }
+                );
+                temp.setFocusTraversable(false);
+                invItemsPane.getChildren().add(temp);
+            }
+            invPane.setVisible(true);
+        } else {
+            invItemsPane.getChildren().clear();
+            invPane.setVisible(false);
+        }
+
+    }
 
     @FXML
     public void keyListener(KeyEvent event) {
         int steps = 1;
-        actionInfo.setText(event.getCode().getChar());
         switch (event.getCode()) {
             case W:
                 if (isObstaclePresent("up", steps, player)) {
@@ -358,6 +351,12 @@ public class GameWindowController {
                     actionInfo.setText(activate((MapObject) gameMap.map[player.getFrontY()][player.getFrontX()], player));
                 }
                 break;
+            case TAB:
+                inv_win_is_toggled = !inv_win_is_toggled;
+                toggleInventoryWindow();
+                break;
+            case F:
+                fight(player, (Character) gameMap.map[player.getFrontY()][player.getFrontX()]);
             default:
                 break;
         }

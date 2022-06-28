@@ -20,10 +20,14 @@ public class Inventory<Object extends ShowInfo> implements Serializable {
     public String addElement(Object element) {
         if (element != null) {
             this.inventory.add(element);
-            inventory.forEach(item -> System.out.println(item.showInfo()));
+//            inventory.forEach(item -> System.out.println(item.showInfo()));
             return element.showInfo() + " has been successfully added to inventory";
         }
         return "ItemNullPointerException";
+    }
+
+    public ArrayList<Object> getInventory() {
+        return this.inventory;
     }
 
     public String removeElement(String elementName) {
