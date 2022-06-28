@@ -44,3 +44,16 @@
 
 #startButton {
 }
+
+#backgroundPane {
+    -fx-background-image: url('../textures/menuBackground.png');
+    -fx-background-size: 100%;
+}
+
+#dialogPane {
+    -fx-background-color: black;
+}
+
+#dialogLabel {
+    -fx-text-fill: white;
+}
