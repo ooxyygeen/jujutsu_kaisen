@@ -16,6 +16,9 @@ import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class GameWindowController {
@@ -31,6 +34,11 @@ public class GameWindowController {
     private ObjectOutputStream oos;
     private ObjectInputStream ois;
     private String sessionName;
+    private boolean loadFlag;
+
+    public void setLoadFlag(boolean aBool) {
+        this.loadFlag = aBool;
+    }
 
     public void setSessionName(String name) {
         this.sessionName = name;
@@ -72,8 +80,15 @@ public class GameWindowController {
     }
 
     public void saveFile() {
+        System.out.println(sessionName);
+        Path path = Paths.get("saveDirectory/" + sessionName);
         try {
-            saveFilePlayer = new FileOutputStream(HelloApplication.class.getResource("saveDirectory").toExternalForm() +
+            Files.createDirectory(path);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            saveFilePlayer = new FileOutputStream("saveDirectory" +
                     "/" + sessionName + "/" + sessionName + ".dat"); // create savefile
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -87,7 +102,7 @@ public class GameWindowController {
             System.out.println("Something went wrong. Try again:(");
         }
         try {
-            saveFileMap = new FileOutputStream(HelloApplication.class.getResource("saveDirectory").toExternalForm() +
+            saveFileMap = new FileOutputStream("saveDirectory" +
                     "/" + sessionName + "/" + sessionName + "Map" + ".dat"); // create savefile
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -101,7 +116,7 @@ public class GameWindowController {
             System.out.println("Something went wrong. Try again:(");
         }
         try {
-            saveFileQuests = new FileOutputStream(HelloApplication.class.getResource("saveDirectory").toExternalForm() +
+            saveFileQuests = new FileOutputStream("saveDirectory" +
                     "/" + sessionName + "/" + sessionName + "Quests" + ".dat"); // create savefile
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -166,6 +181,18 @@ public class GameWindowController {
     @FXML
     private AnchorPane scenePane;
 
+    public void exit() {
+        Stage stage;
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Exit");
+        alert.setHeaderText("You're about to exit!");
+        alert.setContentText("All your unsaved progress will be deleted. ");
+
+        if(alert.showAndWait().get() == ButtonType.OK){
+            stage = (Stage) scenePane.getScene().getWindow();
+            stage.close();
+        }
+    }
 
     private void swap(MapObject first, int Y, int X) {
         gameMap.map[Y][X] = first;
@@ -421,6 +448,39 @@ public class GameWindowController {
             }
         }
         firstInitialization();
+        if (loadFlag) {
+            // read Character data from file
+            try {
+                ois = new ObjectInputStream(new FileInputStream("saveDirectory" +
+                        "/" + sessionName + "/" + sessionName + ".dat"));
+                player = (Character) ois.readObject();
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+                System.out.println("Something went wrong. Try again:(");
+            }
+//                    readSaveFile(player, "", ois);
+
+            // read Map data from file
+            try {
+                ois = new ObjectInputStream(new FileInputStream("saveDirectory" +
+                        "/" + sessionName + "/" + sessionName + "Map" + ".dat"));
+                gameMap = (GameMap) ois.readObject();
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+                System.out.println("Something went wrong. Try again:(");
+            }
+//                    readSaveFile(gameMap, "Map", ois);
+
+            // read Quests data from file
+            try {
+                ois = new ObjectInputStream(new FileInputStream("saveDirectory" +
+                        "/" + sessionName + "/" + sessionName + "Quests" + ".dat"));
+                quests = (Quests) ois.readObject();
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+                System.out.println("Something went wrong. Try again:(");
+            }
+        }
         update();
         isControlLocked = false;
         isStarted = true;

@@ -96,18 +96,5 @@ public class MenuWindowController {
     public void exit() {
         stage = (Stage) anchorPane.getScene().getWindow();
         stage.close();
-        /*Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Exit");
-        alert.setHeaderText("You're about to exit!");
-        alert.setContentText("Do you want to save before exiting?");
-
-        if (alert.showAndWait().get() == ButtonType.OK){
-            stage = (Stage) anchorPane.getScene().getWindow();
-            stage.close();*/
-//            saveGame();
-//            System.out.println("You successfully logged out");
-        //}
     }
 }
-
-
