@@ -5,7 +5,6 @@ import com.engine.javacoursework.Character;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -16,22 +15,36 @@ import javafx.stage.Stage;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 public class GameWindowController {
     private final int mapSizeX = 100;
     private final int mapSizeY = 100;
     private GameMap gameMap = new GameMap(mapSizeY, mapSizeX);
-    private int obstacleX, obstacleY, actionChoice, directionOfMoving, equipmentChoice;
+    private int obstacleX, obstacleY;
     private Character player = new Character();
-    private String filename = "";
-    private FileWriter fileSession;
     private Quests quests = new Quests();
     private FileOutputStream saveFilePlayer;
     private FileOutputStream saveFileMap;
     private FileOutputStream saveFileQuests;
     private ObjectOutputStream oos;
     private ObjectInputStream ois;
+    private String sessionName;
+
+    public void setSessionName(String name) {
+        this.sessionName = name;
+    }
+
+    public void setCharacter(Character arg) {
+        this.player = arg;
+    }
+
+    public void setGameMap(GameMap arg) {
+        this.gameMap = arg;
+    }
+
+    public void setQuests(Quests arg) {
+        this.quests = arg;
+    }
 
     public Character getPlayer() {
         return player;
@@ -47,7 +60,7 @@ public class GameWindowController {
 
     public void readSaveFile(Object aObject, String aSuffix, ObjectInputStream aOis) {
         try {
-            aOis = new ObjectInputStream(new FileInputStream(filename + aSuffix + ".dat"));
+//            aOis = new ObjectInputStream(new FileInputStream(filename + aSuffix + ".dat"));
             aObject = (aObject.getClass());
             aOis.readObject();
         } catch (IOException | ClassNotFoundException e) {
@@ -56,55 +69,48 @@ public class GameWindowController {
         }
     }
 
-    public void saveFile(Object aObject, String aSuffix, String aSession) {
-        switch (aSuffix) {
-            case "" -> {
-                try {
-                    saveFilePlayer = new FileOutputStream(aSession + "/" + filename + aSuffix + ".dat"); // create savefile
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    oos = new ObjectOutputStream(saveFilePlayer);
-                    oos.writeObject(aObject); // записываем значения всех полей перса в файл
-                    oos.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    System.out.println("Something went wrong. Try again:(");
-                }
-            }
-            case "Map" -> {
-                try {
-                    saveFileMap = new FileOutputStream(aSession + "/" + filename + aSuffix + ".dat"); // create savefile
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    oos = new ObjectOutputStream(saveFileMap);
-                    oos.writeObject(aObject); // записываем значения всех полей перса в файл
-                    oos.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    System.out.println("Something went wrong. Try again:(");
-                }
-            }
-            case "Quests" -> {
-                try {
-                    saveFileQuests = new FileOutputStream(aSession + "/" + filename + aSuffix + ".dat"); // create savefile
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    oos = new ObjectOutputStream(saveFileQuests);
-                    oos.writeObject(aObject); // записываем значения всех полей перса в файл
-                    oos.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    System.out.println("Something went wrong. Try again:(");
-                }
-            }
-            default -> {
-            }
+    public void saveFile() {
+        try {
+            saveFilePlayer = new FileOutputStream(HelloApplication.class.getResource("saveDirectory").toExternalForm() +
+                    "/" + sessionName + "/" + sessionName + ".dat"); // create savefile
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        try {
+            oos = new ObjectOutputStream(saveFilePlayer);
+            oos.writeObject(player); // записываем значения всех полей перса в файл
+            oos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Something went wrong. Try again:(");
+        }
+        try {
+            saveFileMap = new FileOutputStream(HelloApplication.class.getResource("saveDirectory").toExternalForm() +
+                    "/" + sessionName + "/" + sessionName + "Map" + ".dat"); // create savefile
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        try {
+            oos = new ObjectOutputStream(saveFileMap);
+            oos.writeObject(gameMap); // записываем значения всех полей перса в файл
+            oos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Something went wrong. Try again:(");
+        }
+        try {
+            saveFileQuests = new FileOutputStream(HelloApplication.class.getResource("saveDirectory").toExternalForm() +
+                    "/" + sessionName + "/" + sessionName + "Quests" + ".dat"); // create savefile
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        try {
+            oos = new ObjectOutputStream(saveFileQuests);
+            oos.writeObject(quests); // записываем значения всех полей перса в файл
+            oos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Something went wrong. Try again:(");
         }
 
     }
@@ -140,7 +146,7 @@ public class GameWindowController {
     private final int gridSizeX = 9, gridSizeY = 9;
     private final int centreX = Math.floorDiv(gridSizeX, 2), centreY = Math.floorDiv(gridSizeY, 2);
     @FXML
-    private Pane mapObjectsPane, invPane, gameOverPane;
+    private Pane mapObjectsPane, invPane, gameOverPane, gameMenuPane;
     GridPane mapObjectsGridPane;
     private Label[][] labels = new Label[gridSizeY][gridSizeX];
     @FXML
@@ -158,19 +164,20 @@ public class GameWindowController {
     @FXML
     private AnchorPane scenePane;
 
+
     private void swap(MapObject first, int Y, int X) {
         gameMap.map[Y][X] = first;
         gameMap.map[first.getPosY()][first.getPosX()] = null;
     }
 
-    private void resizeEvent() {
+//    private void resizeEvent() {
 //        playerDataVBox.resize(mapObjectsPane.getWidth() / 7, mapObjectsPane.getHeight() / 4);
 //        playerDataVBox.setLayoutX(playerDataVBox.getScene().getWidth() - playerDataVBox.getWidth() * (1 + 0.2));
 //        playerDataVBox.setLayoutY(playerDataVBox.getHeight() * (1 + 0.2));
 //        questVBox.resize(mapObjectsPane.getWidth() / 7, mapObjectsPane.getHeight() / 3);
 //        questVBox.setLayoutX(questVBox.getWidth() * (1 + 0.2));
 //        questVBox.setLayoutY(questVBox.getHeight() * (1 + 0.2));
-    }
+//    }
 
     private boolean isObstaclePresent(String direction, int steps, Character player) {
         if (direction.equals("up")) {
@@ -345,6 +352,8 @@ public class GameWindowController {
         }
     }
 
+    private boolean isControlLocked = true;
+
     @FXML
     private void startButton(ActionEvent event) {
         setTest();
@@ -356,6 +365,7 @@ public class GameWindowController {
         }
         firstInitialization();
         update();
+        isControlLocked = false;
     }
 
     private boolean inv_win_is_toggled = false;
@@ -366,11 +376,11 @@ public class GameWindowController {
                 String itemName = ((ShowInfo) player.getIventory().get(i)).showInfo();
                 Button temp = new Button(itemName);
                 temp.setOnAction(event -> {
-                    ShowInfo item = (ShowInfo) player.getItem((((Button) event.getSource()).getText()));
-                    System.out.println("trying to equip " + item.showInfo());
-                    if (player.equipItem(item)) {
-                        invItemsPane.getChildren().clear();
-                        toggleInventoryWindow();
+                            ShowInfo item = (ShowInfo) player.getItem((((Button) event.getSource()).getText()));
+                            System.out.println("trying to equip " + item.showInfo());
+                            if (player.equipItem(item)) {
+                                invItemsPane.getChildren().clear();
+                                toggleInventoryWindow();
                             }
                         }
                 );
@@ -385,7 +395,15 @@ public class GameWindowController {
 
     }
 
-    public void showGameMenu(KeyEvent e) {
+    boolean gameMenuIsToggled = false;
+
+    public void continueButton() {
+        gameMenuIsToggled = !gameMenuIsToggled;
+        gameMenuPane.setVisible(false);
+        isControlLocked = false;
+    }
+
+    public void returnToMenu(ActionEvent event) {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("menu-scene.fxml"));
         Parent root = null;
         try {
@@ -393,16 +411,28 @@ public class GameWindowController {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-        Stage stage = (Stage) ((Scene) e.getSource()).getWindow();
+        Stage stage = (Stage) (((Button) event.getSource()).getScene()).getWindow();
         Scene scene = new Scene(root);
+        String css = this.getClass().getResource("/css/style.css").toExternalForm();
+        scene.getStylesheets().add(css);
         stage.setScene(scene);
         stage.show();
     }
 
+    public void showGameMenu() {
+        if (inv_win_is_toggled) {
+            isControlLocked = true;
+            gameMenuPane.setVisible(true);
+        } else {
+            gameMenuPane.setVisible(false);
+        }
+    }
+
+
     @FXML
     public void keyListener(KeyEvent event) {
         int steps = 1;
-        if (player.isAlive()) {
+        if (player.isAlive() && !isControlLocked) {
             switch (event.getCode()) {
                 case W:
                     if (isObstaclePresent("up", steps, player)) {
@@ -445,19 +475,21 @@ public class GameWindowController {
                     fight(player, (Character) gameMap.map[player.getFrontY()][player.getFrontX()]);
                     break;
                 case ESCAPE:
-                    showGameMenu(event);
+                    showGameMenu();
                 default:
                     break;
             }
+            update();
         } else {
             switch (event.getCode()) {
                 case ESCAPE:
-                    showGameMenu(event);
+                    gameMenuIsToggled = !gameMenuIsToggled;
+                    isControlLocked = false;
+                    showGameMenu();
                     break;
                 default:
                     break;
             }
         }
-        update();
     }
 }

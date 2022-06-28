@@ -26,7 +26,7 @@ public class ChestWithUniform extends MapObject {
     @Override
     public String activate(Character character) {
         if (character != null) {
-            return character.getEquipment().equip("uniform", new Uniform("Paper bag", 1));
+            return character.addItem(new Uniform("Paper bag", 1)) + " and chest was destroyed";
         }
         return "CharacterNullPointerException";
     }

@@ -129,5 +129,26 @@
                 </VBox>
             </children>
         </Pane>
+        <Pane fx:id="gameMenuPane" layoutX="510.0" layoutY="195.0" prefHeight="329.0" prefWidth="259.0" visible="false">
+            <children>
+                <VBox alignment="CENTER" prefHeight="330.0" prefWidth="259.0">
+                    <children>
+                        <Separator orientation="VERTICAL" prefHeight="200.0" visible="false"/>
+                        <Button mnemonicParsing="false" onAction="#continueButton" prefHeight="75.0" prefWidth="100.0"
+                                text="Continue" textAlignment="CENTER"/>
+                        <Separator orientation="VERTICAL" prefHeight="200.0" visible="false"/>
+                        <Button mnemonicParsing="false" onAction="#saveFile" prefHeight="75.0" prefWidth="100.0"
+                                text="Save" textAlignment="CENTER"/>
+                        <Separator orientation="VERTICAL" prefHeight="200.0" visible="false"/>
+                        <Button mnemonicParsing="false" onAction="#returnToMenu" prefHeight="75.0" prefWidth="100.0"
+                                text="Menu" textAlignment="CENTER"/>
+                        <Separator orientation="VERTICAL" prefHeight="200.0" visible="false"/>
+                        <Button mnemonicParsing="false" prefHeight="75.0" prefWidth="100.0" text="Exit"
+                                textAlignment="CENTER"/>
+                        <Separator orientation="VERTICAL" prefHeight="200.0" visible="false"/>
+                    </children>
+                </VBox>
+            </children>
+        </Pane>
     </children>
 </AnchorPane>

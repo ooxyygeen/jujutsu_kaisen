@@ -11,6 +11,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -18,19 +19,16 @@ import javafx.stage.Stage;
 import java.io.*;
 
 public class MenuWindowController {
-    private FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("game-scene.fxml"));
-//    private FileOutputStream saveFilePlayer = null;
-//    private FileOutputStream saveFileMap = null;
-//    private FileOutputStream saveFileQuests = null;
-//    private ObjectOutputStream oos = null;
+    private FXMLLoader fxmlLoader;
+    private GameWindowController gwc;
     private File saveDir;
-    private ObjectInputStream ois = null;
+    private ObjectInputStream ois;
     private Stage stage;
     private String sessionName = "";
     @FXML
     private Pane dialogPane;
     @FXML
-    private Label anchorPane;
+    private AnchorPane anchorPane;
     @FXML
     private Label dialogLabel;
     @FXML
@@ -39,23 +37,27 @@ public class MenuWindowController {
     private TextField textField;
 
     public void switchToGame(ActionEvent e) {
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("game-scene.fxml"));
+        fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("game-scene.fxml"));
         Parent root = null;
         try {
             root = fxmlLoader.load();
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-        stage = (Stage)((Node)e.getSource()).getScene().getWindow();
-        GameWindowController gameWindowController = fxmlLoader.getController();
+        stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
+        gwc = fxmlLoader.getController();
         Scene scene = new Scene(root);
-        scene.setOnKeyPressed(gameWindowController::keyListener);
+        String css = this.getClass().getResource("/css/style.css").toExternalForm();
+        scene.getStylesheets().add(css);
+        scene.setOnKeyPressed(gwc::keyListener);
+        gwc.setSessionName(sessionName);
         stage.setScene(scene);
         stage.show();
     }
 
     public void startButton(ActionEvent e) {
         sessionName = textField.getText();
+        System.out.println(sessionName);
         if (textField.getLength() != 0) {
             switchToGame(e);
         }
@@ -70,14 +72,25 @@ public class MenuWindowController {
 
     }
 
+    @FXML
     public void saveGame() {
-        saveDir = new File("../saveDirectory/"+sessionName);
-        if (!saveDir.exists()){
+        fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("game-scene.fxml"));
+        GameWindowController gwc = fxmlLoader.getController();
+        saveDir = new File("/saveDirectory/" + sessionName);
+        if (!saveDir.exists()) {
             saveDir.mkdirs();
         }
-        ((GameWindowController)fxmlLoader.getController()).saveFile(((GameWindowController)fxmlLoader.getController()).getPlayer(), "", "../saveDirectory/"+sessionName);
-        ((GameWindowController)fxmlLoader.getController()).saveFile(((GameWindowController)fxmlLoader.getController()).getGameMap(), "Map", "../saveDirectory/"+sessionName);
-        ((GameWindowController)fxmlLoader.getController()).saveFile(((GameWindowController)fxmlLoader.getController()).getQuests(), "Quests", "../saveDirectory/"+sessionName);
+        try {
+            fxmlLoader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        gwc = fxmlLoader.getController();
+
+        System.out.println(sessionName);
+//        gwc.saveFile(gwc.getPlayer(), "", "./saveDirectory/"+sessionName);
+//        gwc.saveFile(gwc.getGameMap(), "Map", "./saveDirectory/"+sessionName);
+//        gwc.saveFile(gwc.getQuests(), "Quests", "./saveDirectory/"+sessionName);
     }
 
     public void exit() {
