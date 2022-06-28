@@ -117,5 +117,17 @@
                 </ScrollPane>
             </children>
         </Pane>
+        <Pane id="gameOverPane" fx:id="gameOverPane" disable="true" maxHeight="720.0" maxWidth="1280.0"
+              minHeight="720.0" minWidth="1280.0" prefHeight="720.0" prefWidth="1280.0" visible="false">
+            <children>
+                <VBox id="deathScreenVBox" alignment="CENTER" layoutX="291.0" layoutY="260.0" prefHeight="200.0"
+                      prefWidth="698.0">
+                    <children>
+                        <Label id="deathScreenLabel1" alignment="CENTER" text="You have died =("/>
+                        <Label id="deathScreenLabel2" alignment="CENTER" text="Press ESC to return to menu"/>
+                    </children>
+                </VBox>
+            </children>
+        </Pane>
     </children>
 </AnchorPane>

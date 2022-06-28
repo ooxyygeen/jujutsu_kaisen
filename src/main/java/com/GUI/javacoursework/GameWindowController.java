@@ -4,36 +4,36 @@ import com.engine.javacoursework.*;
 import com.engine.javacoursework.Character;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.TextFlow;
+import javafx.stage.Stage;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Scanner;
 
 public class GameWindowController {
-    private int mapSizeX = 100, mapSizeY = 100;
+    private final int mapSizeX = 100;
+    private final int mapSizeY = 100;
     private GameMap gameMap = new GameMap(mapSizeY, mapSizeX);
     private int obstacleX, obstacleY, actionChoice, directionOfMoving, equipmentChoice;
     private Character player = new Character();
     private String filename = "";
     private FileWriter fileSession;
     private Quests quests = new Quests();
-    private boolean firstStart = true;
-    private Scanner s = new Scanner(System.in);
-    private FileOutputStream saveFilePlayer = null;
-    private FileOutputStream saveFileMap = null;
-    private FileOutputStream saveFileQuests = null;
-    private ObjectOutputStream oos = null;
-    private ObjectInputStream ois = null;
-
-
+    private FileOutputStream saveFilePlayer;
+    private FileOutputStream saveFileMap;
+    private FileOutputStream saveFileQuests;
+    private ObjectOutputStream oos;
+    private ObjectInputStream ois;
 
     public void setTest() {
-//        System.out.println("x: " + player.getPosX() + " y: " + player.getPosY());
         gameMap.map[player.getPosY()][player.getPosX()] = player;
         gameMap.map[4][3] = new PlateWithText(4, 3, true, "Congrats, you have moved!");
         Character fushi = new Character("Megumi Fushiguro", 8, 2, mapSizeY, mapSizeX,
@@ -61,10 +61,10 @@ public class GameWindowController {
         gameMap.map[7][17] = new ChestWithUniform();
     }
 
-    private static int gridSizeX = 9, gridSizeY = 9;
-    private int centreX = Math.floorDiv(gridSizeX, 2), centreY = Math.floorDiv(gridSizeY, 2);
+    private final int gridSizeX = 9, gridSizeY = 9;
+    private final int centreX = Math.floorDiv(gridSizeX, 2), centreY = Math.floorDiv(gridSizeY, 2);
     @FXML
-    private Pane mapObjectsPane, invPane;
+    private Pane mapObjectsPane, invPane, gameOverPane;
     GridPane mapObjectsGridPane;
     private Label[][] labels = new Label[gridSizeY][gridSizeX];
     @FXML
@@ -88,7 +88,6 @@ public class GameWindowController {
     }
 
     private void resizeEvent() {
-//
 //        playerDataVBox.resize(mapObjectsPane.getWidth() / 7, mapObjectsPane.getHeight() / 4);
 //        playerDataVBox.setLayoutX(playerDataVBox.getScene().getWidth() - playerDataVBox.getWidth() * (1 + 0.2));
 //        playerDataVBox.setLayoutY(playerDataVBox.getHeight() * (1 + 0.2));
@@ -161,9 +160,12 @@ public class GameWindowController {
         startButton.setVisible(false);
     }
 
+    public void gameOver() {
+        gameOverPane.setDisable(false);
+        gameOverPane.setVisible(true);
+    }
+
     private void update() {
-        if (player.getStat("health") < 1) {
-        }
         if (player.getPosY() == 4 && player.getPosX() == 20) {
             player.addItem(new FingerOfSukuna());
             quests.HELP();
@@ -201,6 +203,8 @@ public class GameWindowController {
         weaponLabel.setText(player.getEquipment().getWeapon().getName());
         hpLabel.setText("" + player.getStat("health") + "/" + player.getMaxStat("health"));
         hpBar.setProgress(((double) player.getStat("health")) / player.getMaxStat("health"));
+        if (!player.isAlive())
+            gameOver();
     }
 
     private boolean checkFront(Character player) {
@@ -224,7 +228,7 @@ public class GameWindowController {
         } else return false;
     }
 
-    private boolean fight(Character player, Character enemy) {
+    private void fight(Character player, Character enemy) {
         int i = 1;
         while (player.getStat("health") > 0 && enemy.getStat("health") > 0) {
             actionInfo.setText(i + ". Your health: " + player.getStat("health") + "\n"
@@ -261,27 +265,17 @@ public class GameWindowController {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            update();
         }
-        if (player.getStat("health") < 1) {
-            System.out.println("You have died in the battle )-;");
-            System.out.println("Your last words are:\n" + player.getDeathMessage());
-            return false;
-        } else {
-            System.out.println("You have won the battle, congrats! ;-)");
-            System.out.println("Your enemy last words are:\n" + enemy.getDeathMessage());
-            return true;
-        }
-
     }
 
-    public void startButton(ActionEvent event) {
+    @FXML
+    private void startButton(ActionEvent event) {
         setTest();
         for (int i = 0; i < gridSizeY; i++) {
             for (int j = 0; j < gridSizeX; j++) {
                 labels[i][j] = new Label("");
                 labels[i][j].setWrapText(true);
-//                labels[i][j].setMinHeight(mapObjectsPane.getHeight() / gridSizeY);
-//                labels[i][j].setMinWidth(mapObjectsPane.getWidth() / gridSizeX);
             }
         }
         firstInitialization();
@@ -290,18 +284,17 @@ public class GameWindowController {
 
     private boolean inv_win_is_toggled = false;
 
-    public void toggleInventoryWindow() {
+    private void toggleInventoryWindow() {
         if (inv_win_is_toggled) {
-            Iterator it = player.getIventory().iterator();
             for (int i = 0; i < player.getIventory().size(); i++) {
                 String itemName = ((ShowInfo) player.getIventory().get(i)).showInfo();
                 Button temp = new Button(itemName);
                 temp.setOnAction(event -> {
-                            ShowInfo item = (ShowInfo) player.getItem((((Button) event.getSource()).getText()));
-                            System.out.println("trying to equip " + item.showInfo());
-                            if (player.equipItem(item)) {
-                                invItemsPane.getChildren().clear();
-                                toggleInventoryWindow();
+                    ShowInfo item = (ShowInfo) player.getItem((((Button) event.getSource()).getText()));
+                    System.out.println("trying to equip " + item.showInfo());
+                    if (player.equipItem(item)) {
+                        invItemsPane.getChildren().clear();
+                        toggleInventoryWindow();
                             }
                         }
                 );
@@ -316,51 +309,78 @@ public class GameWindowController {
 
     }
 
+    public void showGameMenu(KeyEvent e) {
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("menu-scene.fxml"));
+        Parent root = null;
+        try {
+            root = fxmlLoader.load();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        Stage stage = (Stage) ((Scene) e.getSource()).getWindow();
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }
+
     @FXML
     public void keyListener(KeyEvent event) {
         int steps = 1;
-        switch (event.getCode()) {
-            case W:
-                if (isObstaclePresent("up", steps, player)) {
-                    steps = player.getPosY() - obstacleY - 1;
-                }
-                swap(player, player.getPosY() - steps, player.getPosX());
-                player.move("up", steps, mapSizeX, mapSizeY);
-                break;
-            case D:
-                if (isObstaclePresent("right", steps, player)) {
-                    steps = obstacleX - player.getPosX() - 1;
-                }
-                swap(player, player.getPosY(), player.getPosX() + steps);
-                player.move("right", steps, mapSizeX, mapSizeY);
-                break;
-            case S:
-                if (isObstaclePresent("down", steps, player)) {
-                    steps = obstacleY - player.getPosY() - 1;
-                }
-                swap(player, player.getPosY() + steps, player.getPosX());
-                player.move("down", steps, mapSizeX, mapSizeY);
-                break;
-            case A:
-                if (isObstaclePresent("left", steps, player)) {
-                    steps = player.getPosX() - obstacleX - 1;
-                }
-                swap(player, player.getPosY(), player.getPosX() - steps);
-                player.move("left", steps, mapSizeX, mapSizeY);
-                break;
-            case E:
-                if (checkFront(player)) {
-                    actionInfo.setText(activate((MapObject) gameMap.map[player.getFrontY()][player.getFrontX()], player));
-                }
-                break;
-            case TAB:
-                inv_win_is_toggled = !inv_win_is_toggled;
-                toggleInventoryWindow();
-                break;
-            case F:
-                fight(player, (Character) gameMap.map[player.getFrontY()][player.getFrontX()]);
-            default:
-                break;
+        if (player.isAlive()) {
+            switch (event.getCode()) {
+                case W:
+                    if (isObstaclePresent("up", steps, player)) {
+                        steps = player.getPosY() - obstacleY - 1;
+                    }
+                    swap(player, player.getPosY() - steps, player.getPosX());
+                    player.move("up", steps, mapSizeX, mapSizeY);
+                    break;
+                case D:
+                    if (isObstaclePresent("right", steps, player)) {
+                        steps = obstacleX - player.getPosX() - 1;
+                    }
+                    swap(player, player.getPosY(), player.getPosX() + steps);
+                    player.move("right", steps, mapSizeX, mapSizeY);
+                    break;
+                case S:
+                    if (isObstaclePresent("down", steps, player)) {
+                        steps = obstacleY - player.getPosY() - 1;
+                    }
+                    swap(player, player.getPosY() + steps, player.getPosX());
+                    player.move("down", steps, mapSizeX, mapSizeY);
+                    break;
+                case A:
+                    if (isObstaclePresent("left", steps, player)) {
+                        steps = player.getPosX() - obstacleX - 1;
+                    }
+                    swap(player, player.getPosY(), player.getPosX() - steps);
+                    player.move("left", steps, mapSizeX, mapSizeY);
+                    break;
+                case E:
+                    if (checkFront(player)) {
+                        actionInfo.setText(activate((MapObject) gameMap.map[player.getFrontY()][player.getFrontX()], player));
+                    }
+                    break;
+                case TAB:
+                    inv_win_is_toggled = !inv_win_is_toggled;
+                    toggleInventoryWindow();
+                    break;
+                case F:
+                    fight(player, (Character) gameMap.map[player.getFrontY()][player.getFrontX()]);
+                    break;
+                case ESCAPE:
+                    showGameMenu(event);
+                default:
+                    break;
+            }
+        } else {
+            switch (event.getCode()) {
+                case ESCAPE:
+                    showGameMenu(event);
+                    break;
+                default:
+                    break;
+            }
         }
         update();
     }

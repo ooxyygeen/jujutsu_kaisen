@@ -2,6 +2,8 @@
 
 * {
     -fx-font-family: "Comic Sans MS";
+    -fx-stroke: skyblue;
+    -fx-stroke-width: 0.5px;
 }
 
 #questText {
@@ -15,8 +17,6 @@
 #actionLabel {
     -fx-font-size: 20px;
     -fx-text-alignment: center;
-    -fx-stroke: skyblue;
-    -fx-stroke-width: 1px;
 }
 
 #hpBar {
@@ -56,4 +56,21 @@
 
 #dialogLabel {
     -fx-text-fill: white;
+}
+
+#gameOverPane {
+    -fx-background-image: url('../textures/death_screen.jpg');
+    -fx-background-size: 100%;
+    -fx-alignment: center;
+}
+
+#deathScreenVBox {
+    -fx-alignment: center;
+    -fx-fit-to-width: true;
+    -fx-fit-to-height: true;
+}
+
+#deathScreenLabel1, #deathScreenLabel2 {
+    -fx-font-size: 72px;
+    -fx-stroke: yellow;
 }

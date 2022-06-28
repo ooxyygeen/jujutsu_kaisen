@@ -51,6 +51,10 @@ public class Character<Object extends ShowInfo> extends MapObject implements Ser
         this.direction = target.direction;
     }
 
+    public boolean isAlive() {
+        return this.stats.getStat("health") > 0;
+    }
+
     @Override
     public MapObject clone() {
         return new Character<>(this);

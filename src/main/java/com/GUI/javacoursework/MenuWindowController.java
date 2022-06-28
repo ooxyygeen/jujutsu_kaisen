@@ -29,21 +29,18 @@ public class MenuWindowController {
     @FXML
     private TextField textField;
 
-    public void switchToGame(ActionEvent e) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("game-scene.fxml"));
-        Parent root = fxmlLoader.load();
-        stage = (Stage)((Node)e.getSource()).getScene().getWindow();
-        GameWindowController gameWindowController = fxmlLoader.getController();
-        Scene scene = new Scene(root);
-        scene.setOnKeyPressed(gameWindowController::keyListener);
-        stage.setScene(scene);
-        stage.show();
-    }
-
     public void startButton(ActionEvent e) throws IOException {
         filename = textField.getText();
         if (textField.getLength() != 0) {
-            switchToGame(e);
+            System.out.println(filename);
+            FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("game-scene.fxml"));
+            Parent root = fxmlLoader.load();
+            stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
+            GameWindowController gameWindowController = fxmlLoader.getController();
+            Scene scene = new Scene(root);
+            scene.setOnKeyPressed(gameWindowController::keyListener);
+            stage.setScene(scene);
+            stage.show();
         }
     }
 
@@ -51,6 +48,24 @@ public class MenuWindowController {
         menuChoice = 1;
         dialogLabel.setText("Enter session name");
         dialogPane.setVisible(true);
+
+
+       /* System.out.println("Enter session name");
+        s.nextLine();
+        filename = s.nextLine();
+        while (filename == null && filename.trim().isEmpty()) {
+            System.out.println("Please, enter the session name.");
+            s.nextLine();
+            filename = s.nextLine();
+        }*/
+        /*FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("game-scene.fxml"));
+        Parent root = fxmlLoader.load();
+        stage = (Stage)((Node)e.getSource()).getScene().getWindow();
+        GameWindowController gameWindowController = fxmlLoader.getController();
+        Scene scene = new Scene(root);
+        scene.setOnKeyPressed(gameWindowController::keyListener);
+        stage.setScene(scene);
+        stage.show();*/
     }
 
     public void saveGame(ActionEvent e) {
