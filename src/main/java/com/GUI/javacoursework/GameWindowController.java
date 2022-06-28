@@ -353,7 +353,7 @@ public class GameWindowController {
     }
 
     private boolean isControlLocked = true;
-
+    private boolean isStarted = false;
     @FXML
     private void startButton(ActionEvent event) {
         setTest();
@@ -366,6 +366,7 @@ public class GameWindowController {
         firstInitialization();
         update();
         isControlLocked = false;
+        isStarted = true;
     }
 
     private boolean inv_win_is_toggled = false;
@@ -399,8 +400,8 @@ public class GameWindowController {
 
     public void continueButton() {
         gameMenuIsToggled = !gameMenuIsToggled;
-        gameMenuPane.setVisible(false);
         isControlLocked = false;
+        gameMenuPane.setVisible(false);
     }
 
     public void returnToMenu(ActionEvent event) {
@@ -419,8 +420,8 @@ public class GameWindowController {
         stage.show();
     }
 
-    public void showGameMenu() {
-        if (inv_win_is_toggled) {
+    public void toggleGameMenu() {
+        if (gameMenuIsToggled) {
             isControlLocked = true;
             gameMenuPane.setVisible(true);
         } else {
@@ -432,7 +433,7 @@ public class GameWindowController {
     @FXML
     public void keyListener(KeyEvent event) {
         int steps = 1;
-        if (player.isAlive() && !isControlLocked) {
+        if (player.isAlive() && !isControlLocked && isStarted) {
             switch (event.getCode()) {
                 case W:
                     if (isObstaclePresent("up", steps, player)) {
@@ -475,7 +476,10 @@ public class GameWindowController {
                     fight(player, (Character) gameMap.map[player.getFrontY()][player.getFrontX()]);
                     break;
                 case ESCAPE:
-                    showGameMenu();
+                    gameMenuIsToggled = !gameMenuIsToggled;
+                    isControlLocked = false;
+                    toggleGameMenu();
+                    break;
                 default:
                     break;
             }
@@ -485,7 +489,7 @@ public class GameWindowController {
                 case ESCAPE:
                     gameMenuIsToggled = !gameMenuIsToggled;
                     isControlLocked = false;
-                    showGameMenu();
+                    toggleGameMenu();
                     break;
                 default:
                     break;
