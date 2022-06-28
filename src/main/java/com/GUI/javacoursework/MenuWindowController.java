@@ -7,21 +7,30 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import java.io.IOException;
+import java.io.*;
 
 public class MenuWindowController {
-    private int menuChoice;
+    private FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("game-scene.fxml"));
+//    private FileOutputStream saveFilePlayer = null;
+//    private FileOutputStream saveFileMap = null;
+//    private FileOutputStream saveFileQuests = null;
+//    private ObjectOutputStream oos = null;
+    private File saveDir;
+    private ObjectInputStream ois = null;
     private Stage stage;
-    private String filename = "";
-    private String s;
+    private String sessionName = "";
     @FXML
     private Pane dialogPane;
+    @FXML
+    private Label anchorPane;
     @FXML
     private Label dialogLabel;
     @FXML
@@ -29,47 +38,62 @@ public class MenuWindowController {
     @FXML
     private TextField textField;
 
-    public void startButton(ActionEvent e) throws IOException {
-        filename = textField.getText();
-        if (textField.getLength() != 0) {
-            System.out.println(filename);
-            FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("game-scene.fxml"));
-            Parent root = fxmlLoader.load();
-            stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
-            GameWindowController gameWindowController = fxmlLoader.getController();
-            Scene scene = new Scene(root);
-            scene.setOnKeyPressed(gameWindowController::keyListener);
-            stage.setScene(scene);
-            stage.show();
+    public void switchToGame(ActionEvent e) {
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("game-scene.fxml"));
+        Parent root = null;
+        try {
+            root = fxmlLoader.load();
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
-    }
-
-    public void newGame(ActionEvent e) throws IOException {
-        menuChoice = 1;
-        dialogLabel.setText("Enter session name");
-        dialogPane.setVisible(true);
-
-
-       /* System.out.println("Enter session name");
-        s.nextLine();
-        filename = s.nextLine();
-        while (filename == null && filename.trim().isEmpty()) {
-            System.out.println("Please, enter the session name.");
-            s.nextLine();
-            filename = s.nextLine();
-        }*/
-        /*FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("game-scene.fxml"));
-        Parent root = fxmlLoader.load();
         stage = (Stage)((Node)e.getSource()).getScene().getWindow();
         GameWindowController gameWindowController = fxmlLoader.getController();
         Scene scene = new Scene(root);
         scene.setOnKeyPressed(gameWindowController::keyListener);
         stage.setScene(scene);
-        stage.show();*/
+        stage.show();
     }
 
-    public void saveGame(ActionEvent e) {
+    public void startButton(ActionEvent e) {
+        sessionName = textField.getText();
+        if (textField.getLength() != 0) {
+            switchToGame(e);
+        }
+    }
 
+    public void newGame() {
+        dialogLabel.setText("Enter session name");
+        dialogPane.setVisible(true);
+    }
+
+    public void continueGame() {
+
+    }
+
+    public void saveGame() {
+        saveDir = new File("../saveDirectory/"+sessionName);
+        if (!saveDir.exists()){
+            saveDir.mkdirs();
+        }
+        ((GameWindowController)fxmlLoader.getController()).saveFile(((GameWindowController)fxmlLoader.getController()).getPlayer(), "", "../saveDirectory/"+sessionName);
+        ((GameWindowController)fxmlLoader.getController()).saveFile(((GameWindowController)fxmlLoader.getController()).getGameMap(), "Map", "../saveDirectory/"+sessionName);
+        ((GameWindowController)fxmlLoader.getController()).saveFile(((GameWindowController)fxmlLoader.getController()).getQuests(), "Quests", "../saveDirectory/"+sessionName);
+    }
+
+    public void exit() {
+        stage = (Stage) anchorPane.getScene().getWindow();
+        stage.close();
+        /*Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Exit");
+        alert.setHeaderText("You're about to exit!");
+        alert.setContentText("Do you want to save before exiting?");
+
+        if (alert.showAndWait().get() == ButtonType.OK){
+            stage = (Stage) anchorPane.getScene().getWindow();
+            stage.close();*/
+//            saveGame();
+//            System.out.println("You successfully logged out");
+        //}
     }
 }
 

@@ -33,6 +33,82 @@ public class GameWindowController {
     private ObjectOutputStream oos;
     private ObjectInputStream ois;
 
+    public Character getPlayer() {
+        return player;
+    }
+
+    public GameMap getGameMap() {
+        return gameMap;
+    }
+
+    public Quests getQuests() {
+        return quests;
+    }
+
+    public void readSaveFile(Object aObject, String aSuffix, ObjectInputStream aOis) {
+        try {
+            aOis = new ObjectInputStream(new FileInputStream(filename + aSuffix + ".dat"));
+            aObject = (aObject.getClass());
+            aOis.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+            System.out.println("Something went wrong. Try again:(");
+        }
+    }
+
+    public void saveFile(Object aObject, String aSuffix, String aSession) {
+        switch (aSuffix) {
+            case "" -> {
+                try {
+                    saveFilePlayer = new FileOutputStream(aSession + "/" + filename + aSuffix + ".dat"); // create savefile
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    oos = new ObjectOutputStream(saveFilePlayer);
+                    oos.writeObject(aObject); // записываем значения всех полей перса в файл
+                    oos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    System.out.println("Something went wrong. Try again:(");
+                }
+            }
+            case "Map" -> {
+                try {
+                    saveFileMap = new FileOutputStream(aSession + "/" + filename + aSuffix + ".dat"); // create savefile
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    oos = new ObjectOutputStream(saveFileMap);
+                    oos.writeObject(aObject); // записываем значения всех полей перса в файл
+                    oos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    System.out.println("Something went wrong. Try again:(");
+                }
+            }
+            case "Quests" -> {
+                try {
+                    saveFileQuests = new FileOutputStream(aSession + "/" + filename + aSuffix + ".dat"); // create savefile
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    oos = new ObjectOutputStream(saveFileQuests);
+                    oos.writeObject(aObject); // записываем значения всех полей перса в файл
+                    oos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    System.out.println("Something went wrong. Try again:(");
+                }
+            }
+            default -> {
+            }
+        }
+
+    }
+
     public void setTest() {
         gameMap.map[player.getPosY()][player.getPosX()] = player;
         gameMap.map[4][3] = new PlateWithText(4, 3, true, "Congrats, you have moved!");
