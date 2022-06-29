@@ -4,6 +4,7 @@ import com.engine.javacoursework.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -27,7 +28,7 @@ public class MenuWindowController {
     private Stage stage;
     private String sessionName = "";
     @FXML
-    private Pane dialogPane;
+    private Pane dialogPane, loadPane;
     @FXML
     private AnchorPane anchorPane;
     @FXML
@@ -36,8 +37,6 @@ public class MenuWindowController {
     private TextField dialogErrorLabel;
     @FXML
     private TextField textField;
-    @FXML
-    private Pane loadPane;
     @FXML
     private VBox loadVBox;
 
@@ -60,6 +59,7 @@ public class MenuWindowController {
         stage.setScene(scene);
         stage.show();
     }
+
     @FXML
     public void startButton(ActionEvent e) {
         sessionName = textField.getText();
@@ -87,48 +87,30 @@ public class MenuWindowController {
 
     @FXML
     public void loadGame(ActionEvent e) {
-        loadPane.getChildren().clear();
+        loadVBox.getChildren().clear();
         String path = "saveDirectory/";
 
         try (DirectoryStream<Path> ds = Files.newDirectoryStream(
                 FileSystems.getDefault().getPath(path), Files::isDirectory)) {
             for (Path p : ds) {
-                System.out.println(p.getFileName());
                 String dirName = p.getFileName().toString();
                 Button temp = new Button(dirName);
+                temp.resize(loadVBox.getWidth(), 20);
                 temp.setOnAction(event -> {
                             sessionName = ((Button) event.getSource()).getText();
-                            switchToGame(e, true);
+                            switchToGame(event, true);
                         }
                 );
                 loadVBox.getChildren().add(temp);
+                Separator separator = new Separator(Orientation.VERTICAL);
+                separator.setVisible(false);
+                loadVBox.getChildren().add(separator);
+
             }
             loadPane.setVisible(true);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-
-        /*try {
-            List<Path> dirs = Files.walk(Paths.get(path), 1)
-                    .filter(Files::isDirectory)
-                    .collect(Collectors.toList());
-            for (int i = 0; i < dirs.size(); i++) {
-                String dirName = Path.getDirectoryName(0).dirs.get(i);
-                Button temp = new Button(itemName);
-                temp.setOnAction(event -> {
-                            ShowInfo item = (ShowInfo) player.getItem((((Button) event.getSource()).getText()));
-                            if (player.equipItem(item)) {
-                                invItemsPane.getChildren().clear();
-                                toggleInventoryWindow();
-                            }
-                        }
-                );
-                temp.setFocusTraversable(false);
-                invItemsPane.getChildren().add(temp);
-            }
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }*/
     }
 
     @FXML

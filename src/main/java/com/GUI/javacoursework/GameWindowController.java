@@ -299,6 +299,7 @@ public class GameWindowController {
     }
 
     public void gameOver() {
+        sessionLabel.setVisible(false);
         gameOverPane.setDisable(false);
         gameOverPane.setVisible(true);
     }
