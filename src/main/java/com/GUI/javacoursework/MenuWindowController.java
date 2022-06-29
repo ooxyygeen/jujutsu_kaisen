@@ -36,7 +36,7 @@ public class MenuWindowController {
     @FXML
     private TextField textField;
 
-    public void switchToGame(ActionEvent e) {
+    public void switchToGame(ActionEvent e, boolean load) {
         fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("game-scene.fxml"));
         Parent root = null;
         try {
@@ -51,6 +51,7 @@ public class MenuWindowController {
         scene.getStylesheets().add(css);
         scene.setOnKeyPressed(gwc::keyListener);
         gwc.setSessionName(sessionName);
+        gwc.setLoadFlag(load);
         stage.setScene(scene);
         stage.show();
     }
@@ -59,7 +60,7 @@ public class MenuWindowController {
         sessionName = textField.getText();
         System.out.println(sessionName);
         if (textField.getLength() != 0) {
-            switchToGame(e);
+            switchToGame(e, false);
         }
     }
 
@@ -72,26 +73,11 @@ public class MenuWindowController {
 
     }
 
-    @FXML
-    public void saveGame() {
-        fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("game-scene.fxml"));
-        GameWindowController gwc = fxmlLoader.getController();
-        saveDir = new File("/saveDirectory/" + sessionName);
-        if (!saveDir.exists()) {
-            saveDir.mkdirs();
-        }
-        try {
-            fxmlLoader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        gwc = fxmlLoader.getController();
-
-        System.out.println(sessionName);
-//        gwc.saveFile(gwc.getPlayer(), "", "./saveDirectory/"+sessionName);
-//        gwc.saveFile(gwc.getGameMap(), "Map", "./saveDirectory/"+sessionName);
-//        gwc.saveFile(gwc.getQuests(), "Quests", "./saveDirectory/"+sessionName);
+    public void loadGame(ActionEvent e) {
+        sessionName = "Van";
+        switchToGame(e, true);
     }
+
 
     public void exit() {
         stage = (Stage) anchorPane.getScene().getWindow();
