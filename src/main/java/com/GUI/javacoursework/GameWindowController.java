@@ -89,6 +89,10 @@ public class GameWindowController {
             oos = new ObjectOutputStream(saveFileQuests);
             oos.writeObject(quests); // записываем значения всех полей перса в файл
             oos.close();
+
+            BufferedWriter writer = new BufferedWriter(new FileWriter("saveDirectory/lastSession.txt"));
+            writer.append(sessionName);
+            writer.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -262,15 +266,6 @@ public class GameWindowController {
             stage.close();
         }
     }
-
-//    private void resizeEvent() {
-//        playerDataVBox.resize(mapObjectsPane.getWidth() / 7, mapObjectsPane.getHeight() / 4);
-//        playerDataVBox.setLayoutX(playerDataVBox.getScene().getWidth() - playerDataVBox.getWidth() * (1 + 0.2));
-//        playerDataVBox.setLayoutY(playerDataVBox.getHeight() * (1 + 0.2));
-//        questVBox.resize(mapObjectsPane.getWidth() / 7, mapObjectsPane.getHeight() / 3);
-//        questVBox.setLayoutX(questVBox.getWidth() * (1 + 0.2));
-//        questVBox.setLayoutY(questVBox.getHeight() * (1 + 0.2));
-//    }
 
     public void firstInitialization() {
         mapObjectsPane.setMinSize(mapObjectsPane.getScene().getHeight(), mapObjectsPane.getScene().getHeight());
