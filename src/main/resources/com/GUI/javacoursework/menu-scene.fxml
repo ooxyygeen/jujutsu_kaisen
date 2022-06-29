@@ -26,11 +26,11 @@
                <children>
                   <Button mnemonicParsing="false" onAction="#newGame" prefHeight="40.0" prefWidth="200.0" text="New game" />
                   <Separator prefWidth="200.0" visible="false" />
-                  <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="200.0" text="Continue" />
+                  <Button mnemonicParsing="false" onAction="#continueGame" prefHeight="40.0" prefWidth="200.0"
+                          text="Continue"/>
                   <Separator prefWidth="200.0" visible="false" />
-                  <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="200.0" text="Load game" />
-                  <Separator prefWidth="200.0" visible="false" />
-                  <Button mnemonicParsing="false" onAction="#saveGame" prefHeight="40.0" prefWidth="200.0" text="Save game" />
+                  <Button mnemonicParsing="false" onAction="#loadGame" prefHeight="40.0" prefWidth="200.0"
+                          text="Load game"/>
                   <Separator prefWidth="200.0" visible="false" />
                   <Button mnemonicParsing="false" onAction="#exit" prefHeight="40.0" prefWidth="200.0" text="Exit" />
                </children>

@@ -118,15 +118,23 @@
                         <Separator orientation="VERTICAL" prefHeight="200.0" visible="false" />
                         <Button mnemonicParsing="false" onAction="#continueButton" prefHeight="75.0" prefWidth="100.0" text="Continue" textAlignment="CENTER" />
                         <Separator orientation="VERTICAL" prefHeight="200.0" visible="false" />
-                        <Button mnemonicParsing="false" onAction="#saveFile" prefHeight="75.0" prefWidth="100.0" text="Save" textAlignment="CENTER" />
-                        <Separator orientation="VERTICAL" prefHeight="200.0" visible="false" />
-                        <Button mnemonicParsing="false" onAction="#returnToMenu" prefHeight="75.0" prefWidth="100.0" text="Menu" textAlignment="CENTER" />
-                        <Separator orientation="VERTICAL" prefHeight="200.0" visible="false" />
-                        <Button mnemonicParsing="false" onAction="#exit" prefHeight="75.0" prefWidth="100.0" text="Exit" textAlignment="CENTER" />
-                        <Separator orientation="VERTICAL" prefHeight="200.0" visible="false" />
+                        <Button mnemonicParsing="false" onAction="#saveFile" prefHeight="75.0" prefWidth="100.0"
+                                text="Save" textAlignment="CENTER"/>
+                        <Separator orientation="VERTICAL" prefHeight="200.0" visible="false"/>
+                        <Button mnemonicParsing="false" onAction="#returnToMenu" prefHeight="75.0" prefWidth="100.0"
+                                text="Menu" textAlignment="CENTER"/>
+                        <Separator orientation="VERTICAL" prefHeight="200.0" visible="false"/>
+                        <Button mnemonicParsing="false" onAction="#exitButton" prefHeight="75.0" prefWidth="100.0"
+                                text="Exit" textAlignment="CENTER"/>
+                        <Separator orientation="VERTICAL" prefHeight="200.0" visible="false"/>
                     </children>
                 </VBox>
             </children>
         </Pane>
+        <Label fx:id="sessionLabel" layoutX="1110.0" layoutY="42.0" textAlignment="CENTER" visible="false">
+            <font>
+                <Font size="25.0"/>
+            </font>
+        </Label>
     </children>
 </AnchorPane>

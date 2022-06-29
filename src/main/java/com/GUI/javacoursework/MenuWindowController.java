@@ -55,10 +55,9 @@ public class MenuWindowController {
         stage.setScene(scene);
         stage.show();
     }
-
+    @FXML
     public void startButton(ActionEvent e) {
         sessionName = textField.getText();
-        System.out.println(sessionName);
         if (textField.getLength() != 0) {
             switchToGame(e, false);
         }
@@ -69,16 +68,18 @@ public class MenuWindowController {
         dialogPane.setVisible(true);
     }
 
+    @FXML
     public void continueGame() {
 
     }
 
+    @FXML
     public void loadGame(ActionEvent e) {
         sessionName = "Van";
         switchToGame(e, true);
     }
 
-
+    @FXML
     public void exit() {
         stage = (Stage) anchorPane.getScene().getWindow();
         stage.close();

@@ -236,7 +236,7 @@ public class GameWindowController {
     @FXML
     private ProgressBar hpBar;
     @FXML
-    private Label playerPosX_label, playerPosY_label, actionInfo, hpLabel, weaponLabel, uniformLabel;
+    private Label playerPosX_label, playerPosY_label, actionInfo, hpLabel, weaponLabel, uniformLabel, sessionLabel;
     @FXML
     private Button startButton;
     @FXML
@@ -293,6 +293,8 @@ public class GameWindowController {
                 mapObjectsGridPane.add(stackPanes, i, j);
             }
         }
+        sessionLabel.setText(sessionName);
+        sessionLabel.setVisible(true);
         mapObjectsPane.getChildren().add(mapObjectsGridPane);
         mapObjectsPane.setVisible(true);
         actionInfo.setVisible(true);
@@ -407,7 +409,6 @@ public class GameWindowController {
 
     @FXML
     private void startButton(ActionEvent event) {
-        System.out.println(sessionName + loadFlag);
         setTest();
         for (int i = 0; i < gridSizeY; i++) {
             for (int j = 0; j < gridSizeX; j++) {
@@ -421,7 +422,6 @@ public class GameWindowController {
                 ois = new ObjectInputStream(new FileInputStream("saveDirectory" +
                         "/" + sessionName + "/" + sessionName + ".dat"));
                 player = (Character) ois.readObject();
-                System.out.println("" + player.getStat("health"));
                 ois = new ObjectInputStream(new FileInputStream("saveDirectory" +
                         "/" + sessionName + "/" + sessionName + "Map" + ".dat"));
                 gameMap = (GameMap) ois.readObject();
